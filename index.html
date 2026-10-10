@@ -1,117 +1,229 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Quorance CSM Brain — Neural Map (anatomical)</title>
+<title>Quorance CSM Brain — How an account flows through</title>
 <style>
-:root{--bg:#0a0e17;--ink:#cdd6e4;--mut:#7c8a9c;--acc:#5b8def;--grn:#3fae6b;--ylw:#e0b341;--red:#e0483c;--mag:#c0468f}
+:root{--bg:#0a0e17;--ink:#cdd6e4;--mut:#8a97a8;--acc:#5b8def;--grn:#3fae6b;--ylw:#e0b341;--red:#e0483c}
 *{box-sizing:border-box}
-html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
-  font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;overflow:hidden}
-#bar{position:fixed;top:0;left:0;right:0;height:42px;background:#11182a;border-bottom:1px solid #1f2a44;
-  display:flex;align-items:center;gap:14px;padding:0 14px;z-index:10;font-size:12px}
-#bar b{color:#fff}#bar .hint{color:var(--mut)}
-#zoom{margin-left:auto;display:flex;gap:6px}
-#zoom button{background:#1f2a44;color:var(--ink);border:1px solid #2a3550;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:12px}
-#stage{position:absolute;top:42px;left:0;right:0;bottom:0;overflow:hidden;cursor:grab}
-#stage.grab{cursor:grabbing}
-svg{width:100%;height:100%;display:block}
-.brain{fill:#101b30;fill-opacity:.30;stroke:#2c3c5c;stroke-opacity:.5;stroke-width:2}
-.region circle{r:28;fill:#15203a;stroke:var(--acc);stroke-width:2.5;cursor:pointer;transition:r .15s}
-.region:hover circle{stroke:#fff;r:32}
-.region text.name{fill:var(--ink);font-size:11px;text-anchor:middle;pointer-events:none;font-weight:600}
-.region text.job{fill:var(--mut);font-size:8.5px;text-anchor:middle;pointer-events:none}
-.region.mag circle{stroke:var(--mag)}.region.red circle{stroke:var(--red)}
-.link{stroke:#243352;stroke-width:1.5;fill:none}
-.pulse{fill:#e0b341}
-.popup{position:fixed;max-width:350px;background:#11182a;border:1px solid #2a3550;border-radius:10px;
-  padding:12px 14px;font-size:12px;display:none;z-index:20;box-shadow:0 8px 30px rgba(0,0,0,.5)}
-.popup h3{margin:0 0 6px;color:#fff;font-size:14px}
-.popup .p{margin:6px 0;padding:6px 8px;border-radius:6px;background:#15203a;cursor:pointer}
-.popup .p:hover{background:#1c2a47}.popup .p b{color:var(--acc)}
-.popup .abstract{color:var(--ylw);font-size:10px;margin-top:2px}
-#legend{position:fixed;bottom:10px;left:14px;font-size:11px;color:var(--mut);z-index:10}
-#legend span{margin-right:12px}#legend i{font-style:normal}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;padding:28px;line-height:1.45}
+h1{color:#fff;font-size:22px;margin:0 0 4px}
+.sub{color:var(--mut);font-size:13px;margin-bottom:22px}
+h2{color:var(--acc);font-size:15px;margin:34px 0 12px;border-bottom:1px solid #1f2a44;padding-bottom:6px}
+.flow{display:flex;flex-direction:column;gap:0}
+.stage{display:grid;grid-template-columns:46px 200px 1fr;gap:14px;align-items:start;
+  background:#11182a;border:1px solid #1f2a44;border-radius:12px;padding:14px 16px;margin-bottom:10px}
+.num{grid-row:span 2;font-size:26px;font-weight:700;color:var(--acc);text-align:center;align-self:center}
+.bio{font-weight:700;color:#fff;font-size:15px}
+.biosub{display:block;font-weight:400;color:var(--mut);font-size:11px;margin-top:2px}
+.csm{font-size:13px;color:#cdd6e4}
+.real{grid-column:3;margin-top:8px;background:#0e1422;border:1px solid #233; border-radius:8px;padding:8px 10px;font-size:12.5px}
+.rlab{color:var(--ylw);font-weight:700;margin-right:6px}
+.chips{grid-column:3;margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid #333; border-radius:20px;padding:2px 9px;font-size:11px;background:#0e1422}
+.chip b{font-weight:700} .chip i{color:var(--mut);font-style:normal;font-size:10px;margin-left:4px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px}
+.prow{background:#11182a;border:1px solid #1f2a44;border-radius:10px;padding:10px 12px;font-size:12px}
+.pid{font-weight:700;font-size:13px}
+.pword{color:var(--mut);font-size:10px;letter-spacing:.5px;margin:1px 0 4px}
+.ploc{color:#cdd6e4} .ploc b{color:var(--red)}
+.ptest{color:var(--mut);font-size:10.5px;margin-top:5px}
+.legend{font-size:12px;color:var(--mut);margin-top:10px}
+.legend span{margin-right:16px}
+.note{background:#161d2e;border-left:3px solid var(--ylw);padding:10px 14px;border-radius:6px;
+  font-size:12.5px;color:#cdd6e4;margin:10px 0}
 </style></head><body>
-<div id="bar">
-  <b>Quorance CSM Brain — Neural Map</b>
-  <span class="hint">scroll zoom &middot; drag pan &middot; click region to expand cell parts &middot; amber pulses = information flow</span>
-  <span id="zoom"><button onclick="zoomBy(1.25)">+</button><button onclick="zoomBy(0.8)">−</button><button onclick="toggleBrain()" id="bbtn">brain: on</button><button onclick="resetView()">reset</button></span>
-</div>
-<div id="stage"><svg id="svg" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid meet"><g id="viewport"></g></svg></div>
-<div class="popup" id="popup"></div>
-<div id="legend">
-  <span><i class="dot" style="background:var(--acc)"></i>region (assembled from real cells)</span>
-  <span><i class="dot" style="background:var(--grn)"></i>part: behavior tested</span>
-  <span><i class="dot" style="background:var(--ylw)"></i>part: bio-guided</span>
-  <span><i class="dot" style="background:var(--mag)"></i>AI reads (Sensor)</span>
-  <span><i class="dot" style="background:var(--red)"></i>inhibitory veto (Amygdala)</span>
-  <span><i class="dot" style="background:#101b30;border:1px solid #2c3c5c"></i>faded = real brain location</span>
-</div>
-<script>
-const DATA={"regions": [{"id": "PNS_AFFERENT", "biology": "peripheral sensory nerve", "csm_job": "read each platform surface (ISN/Avetta/Veriforce/Cloud/SF)", "x": 0.43, "y": 0.945, "parts": []}, {"id": "BRAINSTEM", "biology": "vital / life-support nucleus", "csm_job": "Verifier refuses unsourced claims; credential-health monitor", "x": 0.53, "y": 0.8, "parts": [{"id": "apoptosis", "faith": "behavior_tested", "status": "built", "beh": "the cell dies on lost capability, not on a count of injuries", "abstract": "\u2248 set-containment death \u2014 real: damage-induced death"}, {"id": "biogenesis", "faith": "behavior_tested", "status": "built", "beh": "a new copy of a part is synthesised from a stable template and answers again", "abstract": "\u2248 synth copy from template \u2014 real: protein synthesis"}, {"id": "habituation", "faith": "behavior_tested", "status": "built", "beh": "a repeated identical stimulus fades and a novel one arrives at full strength", "abstract": "\u2248 fade on repeated identical \u2014 real: synaptic depression"}, {"id": "proteostasis", "faith": "behavior_tested", "status": "built", "beh": "a faulty product is inspected as it emerges and is destroyed rather than shipped", "abstract": "\u2248 destroy-on-contradiction \u2014 real: ubiquitin-proteasome QC"}, {"id": "redundancy", "faith": "bio_guided", "status": "built", "beh": "more than one copy of the same machine exists, and damage to one does not reach another", "abstract": "\u2248 explicit copies \u2014 real: redundant molecular machinery"}, {"id": "regrowth", "faith": "bio_guided", "status": "built", "beh": "lost tissue is replaced; declared as tissue-level, not neuron behaviour", "abstract": "\u2248 template regrow \u2014 real: neuro/glial regeneration (tissue-level)"}, {"id": "turnover", "faith": "behavior_tested", "status": "built", "beh": "a part keeps its place by working, and is replaced when it stops", "abstract": "\u2248 renewal on use \u2014 real: continuous protein turnover"}]}, {"id": "THALAMUS", "biology": "sensory relay + gate", "csm_job": "Integrator reconciles mirror vs truth, names BOTH on disagreement", "x": 0.52, "y": 0.43, "parts": [{"id": "synapse", "faith": "bio_guided", "status": "built", "beh": "the output crosses a gap as a signal the receiver can act on, and the receiver can weigh it", "abstract": "\u2248 simplified weight \u2014 real: dynamic conductance, STDP"}]}, {"id": "CEREBELLUM", "biology": "coordination / error control", "csm_job": "Population lateral inhibition selects one winning facet", "x": 0.79, "y": 0.67, "parts": [{"id": "ei_balance", "faith": "bio_guided", "status": "built", "beh": "a minority of inhibitory cells changes the population's answer in the direction inhibition predicts", "abstract": "\u2248 constructed 25% inhibitory fraction \u2014 real cortex ~20-30%, grown not set"}, {"id": "inhibitory", "faith": "behavior_tested", "status": "built", "beh": "a separate cell whose output can veto, and a veto wins", "abstract": "\u2248 simple veto flag \u2014 real inhibition is a dynamic conductance from another cell"}, {"id": "synapse", "faith": "bio_guided", "status": "built", "beh": "the output crosses a gap as a signal the receiver can act on, and the receiver can weigh it", "abstract": "\u2248 simplified weight \u2014 real: dynamic conductance, STDP"}]}, {"id": "HIPPOCAMPUS", "biology": "memory", "csm_job": "Fact Ledger persistent memory of decided accounts", "x": 0.48, "y": 0.57, "parts": [{"id": "neurogenesis", "faith": "behavior_tested", "status": "built", "beh": "the system grows a new cell on its own; NOT BUILT", "abstract": "NOT BUILT \u2014 real adult human neurogenesis contested"}, {"id": "persistent_activity", "faith": "behavior_tested", "status": "built", "beh": "a fact held across a delay is still available when it is needed later", "abstract": "\u2248 store dict \u2014 real: sustained firing / synaptic trace"}, {"id": "reconsolidation", "faith": "behavior_tested", "status": "built", "beh": "a contradicted rule is re-opened rather than kept, and a re-adoption must be a strict improvement", "abstract": "\u2248 strict-improvement rule re-open \u2014 real: labile memory on retrieval"}]}, {"id": "OCCIPITAL", "biology": "cortical: perceive", "csm_job": "sensory read circuits (specialist perception cells)", "x": 0.74, "y": 0.26, "parts": [{"id": "dendrites", "faith": "implemented", "status": "built", "beh": "a part that only reads the situation and hands the facts on, deciding nothing", "abstract": "\u2248 static weighted sum \u2014 real dendrites integrate actively over time (multi-compartment)"}, {"id": "plasticity", "faith": "behavior_tested", "status": "built", "beh": "repeated evidence makes a rule harder to displace, and enough contrary evidence still displaces it", "abstract": "\u2248 supervised example weight update \u2014 real: local, spike-timing dependent (STDP)"}, {"id": "self_organization", "faith": "behavior_tested", "status": "built", "beh": "cells take their sub-roles from what they see rather than from a human assignment", "abstract": "\u2248 counterfactual re-scoring \u2014 real: activity-dependent wiring"}, {"id": "soma", "faith": "behavior_tested", "status": "built", "beh": "separate inputs are combined into one state before anything decides", "abstract": "\u2248 static weighted sum \u2014 biology integrates over time; threshold analog, not digital"}]}, {"id": "PARIETAL", "biology": "cortical: integrate", "csm_job": "reconciliation circuits (specialist integration cells)", "x": 0.48, "y": 0.2, "parts": [{"id": "dendrites", "faith": "implemented", "status": "built", "beh": "a part that only reads the situation and hands the facts on, deciding nothing", "abstract": "\u2248 static weighted sum \u2014 real dendrites integrate actively over time (multi-compartment)"}, {"id": "plasticity", "faith": "behavior_tested", "status": "built", "beh": "repeated evidence makes a rule harder to displace, and enough contrary evidence still displaces it", "abstract": "\u2248 supervised example weight update \u2014 real: local, spike-timing dependent (STDP)"}, {"id": "self_organization", "faith": "behavior_tested", "status": "built", "beh": "cells take their sub-roles from what they see rather than from a human assignment", "abstract": "\u2248 counterfactual re-scoring \u2014 real: activity-dependent wiring"}, {"id": "soma", "faith": "behavior_tested", "status": "built", "beh": "separate inputs are combined into one state before anything decides", "abstract": "\u2248 static weighted sum \u2014 biology integrates over time; threshold analog, not digital"}]}, {"id": "TEMPORAL", "biology": "cortical: recall", "csm_job": "classification recall + Fact Ledger read", "x": 0.43, "y": 0.54, "parts": []}, {"id": "FRONTAL", "biology": "cortical: executive", "csm_job": "Decider (VERIFIED/BLOCKED/CONTINGENT) + at-risk triage", "x": 0.23, "y": 0.34, "parts": [{"id": "axon", "faith": "implemented", "status": "built", "beh": "exactly one output leaves the cell per occasion", "abstract": "we model no propagation timing"}, {"id": "ei_balance", "faith": "bio_guided", "status": "built", "beh": "a minority of inhibitory cells changes the population's answer in the direction inhibition predicts", "abstract": "\u2248 constructed 25% inhibitory fraction \u2014 real cortex ~20-30%, grown not set"}, {"id": "hillock", "faith": "behavior_tested", "status": "built", "beh": "one threshold, all-or-none: the same inputs either fire or rest, and never half-fire", "abstract": "\u2248 binary fire \u2014 real: spike + refractory + rate code"}, {"id": "myelin", "faith": "behavior_tested", "status": "built", "beh": "the same answers arrive faster after wrapping, with the answers unchanged", "abstract": "\u2248 speed wrap \u2014 real: saltatory conduction; we model no timing"}, {"id": "plasticity", "faith": "behavior_tested", "status": "built", "beh": "repeated evidence makes a rule harder to displace, and enough contrary evidence still displaces it", "abstract": "\u2248 supervised example weight update \u2014 real: local, spike-timing dependent (STDP)"}, {"id": "soma", "faith": "behavior_tested", "status": "built", "beh": "separate inputs are combined into one state before anything decides", "abstract": "\u2248 static weighted sum \u2014 biology integrates over time; threshold analog, not digital"}]}, {"id": "BASAL_GANGLIA", "biology": "action selection", "csm_job": "winner-take-all: Site Tracker / Insurance / Questionnaire / Full Review", "x": 0.43, "y": 0.43, "parts": [{"id": "axon", "faith": "implemented", "status": "built", "beh": "exactly one output leaves the cell per occasion", "abstract": "we model no propagation timing"}, {"id": "myelin", "faith": "behavior_tested", "status": "built", "beh": "the same answers arrive faster after wrapping, with the answers unchanged", "abstract": "\u2248 speed wrap \u2014 real: saltatory conduction; we model no timing"}]}, {"id": "AMYGDALA", "biology": "threat / veto", "csm_job": "Inhibitor: NO write without human approval (veto synapse)", "x": 0.4, "y": 0.56, "parts": [{"id": "inhibitory", "faith": "behavior_tested", "status": "built", "beh": "a separate cell whose output can veto, and a veto wins", "abstract": "\u2248 simple veto flag \u2014 real inhibition is a dynamic conductance from another cell"}]}], "links": [["PNS_AFFERENT", "BRAINSTEM"], ["BRAINSTEM", "THALAMUS"], ["THALAMUS", "OCCIPITAL"], ["THALAMUS", "PARIETAL"], ["THALAMUS", "TEMPORAL"], ["OCCIPITAL", "PARIETAL"], ["PARIETAL", "TEMPORAL"], ["PARIETAL", "FRONTAL"], ["TEMPORAL", "FRONTAL"], ["TEMPORAL", "HIPPOCAMPUS"], ["HIPPOCAMPUS", "AMYGDALA"], ["FRONTAL", "BASAL_GANGLIA"], ["BASAL_GANGLIA", "THALAMUS"], ["OCCIPITAL", "CEREBELLUM"], ["CEREBELLUM", "BASAL_GANGLIA"], ["PARIETAL", "BRAINSTEM"], ["OCCIPITAL", "BRAINSTEM"]], "brain_path": "M150 300 C120 210 160 110 300 85 C440 60 600 65 740 120 C840 155 865 250 830 320 C815 355 780 375 745 378 C760 410 835 415 852 475 C860 530 805 560 762 542 C742 533 722 505 702 472 C665 462 625 455 588 452 C568 475 562 525 545 562 C538 600 532 642 522 662 C516 672 502 672 500 656 C497 622 502 582 512 552 C502 512 482 472 442 452 C382 448 300 448 242 432 C182 420 152 382 150 300 Z", "summary": {"parts_total": 20, "with_test": 20, "brain_cells": 85, "inhibitory_cells": 20, "real_accounts": 9379}, "generated": "2026-10-09T19:19:55-0700"};const W=1000,H=700;
-const svg=document.getElementById('svg');const vp=document.getElementById('viewport');
-let scale=1,tx=0,ty=0,drag=false,lx=0,ly=0;
-function apply(){vp.setAttribute('transform',`translate(${tx},${ty}) scale(${scale})`);}
-function zoomBy(f){scale=Math.max(.3,Math.min(7,scale*f));apply();}
-function resetView(){scale=1;tx=0;ty=0;apply();}
-const stage=document.getElementById('stage');
-stage.addEventListener('wheel',e=>{e.preventDefault();const f=e.deltaY<0?1.12:0.89;
-  const r=svg.getBoundingClientRect();const mx=(e.clientX-r.left)/r.width*W,my=(e.clientY-r.top)/r.height*H;
-  const ns=Math.max(.3,Math.min(7,scale*f));tx=mx-(mx-tx)*(ns/scale);ty=my-(my-ty)*(ns/scale);scale=ns;apply();},{passive:false});
-stage.addEventListener('mousedown',e=>{drag=true;lx=e.clientX;ly=e.clientY;stage.classList.add('grab');});
-window.addEventListener('mouseup',()=>{drag=false;stage.classList.remove('grab');});
-window.addEventListener('mousemove',e=>{if(!drag)return;const r=svg.getBoundingClientRect();
-  tx+=(e.clientX-lx)/r.width*W;ty+=(e.clientY-ly)/r.height*H;lx=e.clientX;ly=e.clientY;apply();});
+<h1>How a real account flows through the CSM Brain</h1>
+<div class="sub">Quorance (LAL Digital) &middot; CSM account-review nervous system &middot; one REAL at-risk account traced stage by stage &middot; zero model calls &middot; read-only</div>
 
-// faded real brain
-const brain=document.createElementNS('http://www.w3.org/2000/svg','path');
-brain.setAttribute('d',DATA.brain_path);brain.setAttribute('class','brain');vp.appendChild(brain);
-let brainOn=true;function toggleBrain(){brainOn=!brainOn;brain.style.display=brainOn?'':'none';
-  document.getElementById('bbtn').textContent='brain: '+(brainOn?'on':'off');}
+<div class="note"><b>Real example:</b> account <b>A1 American Fence::0016g00000KkW1PAAV</b> &mdash; real risk signals: compliance_concern, contract_drop, renewal_within_30;
+expired contracts on file: <b>2</b>. This account has gaps, so the brain does NOT auto-verify or auto-write &mdash;
+it is held for a human. That is the safety design working.</div>
 
-const byId={};DATA.regions.forEach(r=>byId[r.id]=r);
-DATA.links.forEach(([a,b],i)=>{if(!byId[a]||!byId[b])return;const A=byId[a],B=byId[b];
-  const ln=document.createElementNS('http://www.w3.org/2000/svg','line');
-  ln.setAttribute('x1',A.x*W);ln.setAttribute('y1',A.y*H);ln.setAttribute('x2',B.x*W);ln.setAttribute('y2',B.y*H);
-  ln.setAttribute('class','link');vp.appendChild(ln);
-  const pu=document.createElementNS('http://www.w3.org/2000/svg','circle');
-  pu.setAttribute('r',(a==='PNS_AFFERENT'?5:3.5));pu.setAttribute('class','pulse');
-  const am=document.createElementNS('http://www.w3.org/2000/svg','animateMotion');
-  am.setAttribute('path',`M${A.x*W} ${A.y*H} L${B.x*W} ${B.y*H}`);
-  am.setAttribute('dur',(2.2+(i%5)*0.25)+'s');am.setAttribute('begin',(i*0.3)+'s');
-  am.setAttribute('repeatCount','indefinite');pu.appendChild(am);vp.appendChild(pu);
-  const sd=document.createElementNS('http://www.w3.org/2000/svg','circle');
-  sd.setAttribute('cx',(A.x+B.x)/2*W);sd.setAttribute('cy',(A.y+B.y)/2*H);sd.setAttribute('r',2.5);
-  sd.setAttribute('fill','#e0b341');sd.setAttribute('opacity','.6');vp.appendChild(sd);
-});
+<h2>The flow (8 stages, left to right as you read down)</h2>
+<div class="flow">
+    <div class="stage">
+      <div class="num">1</div>
+      <div class="bio">PNS AFFERENT<span class="biosub">Sensory nerves</span></div>
+      <div class="csm">Reads each platform surface (ISN/Avetta/Veriforce/Cloud/SF)</div>
+      <div class="real"><span class="rlab">REAL ACCOUNT:</span> ISN badge: NOT green &middot; Avetta cert expired: YES &middot; Veriforce VQ: not &middot; Cloud record: MISSING</div>
+      <div class="chips"><span class="chip" style="border-color:#5b8def"><b style="color:#5b8def">dendrites</b> <i>WIRED</i></span></div>
+    </div>
+    <div class="stage">
+      <div class="num">2</div>
+      <div class="bio">BRAINSTEM<span class="biosub">Vital / life-support</span></div>
+      <div class="csm">Refuses unsourced claims; checks credential health</div>
+      <div class="real"><span class="rlab">REAL ACCOUNT:</span> Verifier: PASSED (claim had a source) &middot; Credential dead: no</div>
+      <div class="chips"><span class="chip" style="border-color:#3fae6b"><b style="color:#3fae6b">inhibitory</b> <i>WIRED</i></span><span class="chip" style="border-color:#3fae6b"><b style="color:#3fae6b">habituation</b> <i>proven&middot;not yet in brain</i></span><span class="chip" style="border-color:#3fae6b"><b style="color:#3fae6b">proteostasis</b> <i>proven&middot;not yet in brain</i></span></div>
+    </div>
+    <div class="stage">
+      <div class="num">3</div>
+      <div class="bio">THALAMUS<span class="biosub">Relay + gate</span></div>
+      <div class="csm">Integrator reconciles what the mirrors say vs the truth</div>
+      <div class="real"><span class="rlab">REAL ACCOUNT:</span> mirror_ok: yes &middot; cert_current: NO &middot; no_gaps: NO &middot; disagreements: none</div>
+      <div class="chips"><span class="chip" style="border-color:#3fae6b"><b style="color:#3fae6b">soma</b> <i>WIRED</i></span><span class="chip" style="border-color:#e0b341"><b style="color:#e0b341">synapse</b> <i>WIRED</i></span></div>
+    </div>
+    <div class="stage">
+      <div class="num">4</div>
+      <div class="bio">CORTEX<span class="biosub">Specialist lobes</span></div>
+      <div class="csm">Occipital=perceive, Parietal=integrate, Temporal=recall (each a column of 20 cells, 25% inhibitory)</div>
+      <div class="real"><span class="rlab">REAL ACCOUNT:</span> 4 columns &times; 20 cells = 80 &middot; inhibitory per column: 5 (25%) &middot; cells fired this account: 0 (inputs not all green, so columns stay quiet)</div>
+      <div class="chips"><span class="chip" style="border-color:#5b8def"><b style="color:#5b8def">dendrites</b> <i>WIRED</i></span><span class="chip" style="border-color:#3fae6b"><b style="color:#3fae6b">soma</b> <i>WIRED</i></span><span class="chip" style="border-color:#3fae6b"><b style="color:#3fae6b">hillock</b> <i>WIRED</i></span><span class="chip" style="border-color:#5b8def"><b style="color:#5b8def">axon</b> <i>WIRED</i></span><span class="chip" style="border-color:#e0b341"><b style="color:#e0b341">synapse</b> <i>WIRED</i></span><span class="chip" style="border-color:#3fae6b"><b style="color:#3fae6b">inhibitory</b> <i>WIRED</i></span><span class="chip" style="border-color:#3fae6b"><b style="color:#3fae6b">plasticity</b> <i>WIRED</i></span><span class="chip" style="border-color:#e0b341"><b style="color:#e0b341">ei_balance</b> <i>WIRED</i></span><span class="chip" style="border-color:#3fae6b"><b style="color:#3fae6b">persistent_activity</b> <i>WIRED</i></span><span class="chip" style="border-color:#3fae6b"><b style="color:#3fae6b">self_organization</b> <i>proven&middot;not yet in brain</i></span></div>
+    </div>
+    <div class="stage">
+      <div class="num">5</div>
+      <div class="bio">CEREBELLUM<span class="biosub">Coordination / error control</span></div>
+      <div class="csm">Lateral inhibition selects ONE winning facet (quality check)</div>
+      <div class="real"><span class="rlab">REAL ACCOUNT:</span> Lateral inhibition ran inside each column &middot; one winner per column by design</div>
+      <div class="chips"><span class="chip" style="border-color:#3fae6b"><b style="color:#3fae6b">inhibitory</b> <i>WIRED</i></span><span class="chip" style="border-color:#e0b341"><b style="color:#e0b341">ei_balance</b> <i>WIRED</i></span></div>
+    </div>
+    <div class="stage">
+      <div class="num">6</div>
+      <div class="bio">FRONTAL<span class="biosub">Executive</span></div>
+      <div class="csm">Decider: VERIFIED / BLOCKED / CONTINGENT</div>
+      <div class="real"><span class="rlab">REAL ACCOUNT:</span> Verdict: <b style='color:#e0b341'>CONTINGENT</b> (all-3-green needed to VERIFY; this account has gaps)</div>
+      <div class="chips"><span class="chip" style="border-color:#3fae6b"><b style="color:#3fae6b">soma</b> <i>WIRED</i></span><span class="chip" style="border-color:#3fae6b"><b style="color:#3fae6b">hillock</b> <i>WIRED</i></span><span class="chip" style="border-color:#5b8def"><b style="color:#5b8def">axon</b> <i>WIRED</i></span></div>
+    </div>
+    <div class="stage">
+      <div class="num">7</div>
+      <div class="bio">BASAL GANGLIA<span class="biosub">Action selection</span></div>
+      <div class="csm">Winner-take-all: which work module is due</div>
+      <div class="real"><span class="rlab">REAL ACCOUNT:</span> Modules due: site_tracker_due, insurance_expiring, questionnaire_pending, full_review &middot; selected: none</div>
+      <div class="chips"><span class="chip" style="border-color:#e0b341"><b style="color:#e0b341">synapse</b> <i>WIRED</i></span><span class="chip" style="border-color:#3fae6b"><b style="color:#3fae6b">inhibitory</b> <i>WIRED</i></span><span class="chip" style="border-color:#e0b341"><b style="color:#e0b341">ei_balance</b> <i>WIRED</i></span></div>
+    </div>
+    <div class="stage">
+      <div class="num">8</div>
+      <div class="bio">HIPPOCAMPUS + AMYGDALA<span class="biosub">Memory + veto</span></div>
+      <div class="csm">Store the decision; NO write without human approval</div>
+      <div class="real"><span class="rlab">REAL ACCOUNT:</span> Stored verdict: CONTINGENT &middot; Human approved: NO -> <b style='color:#e0483c'>WITHHELD_HUMAN_NOT_APPROVED</b> (nothing is written or sent)</div>
+      <div class="chips"><span class="chip" style="border-color:#3fae6b"><b style="color:#3fae6b">persistent_activity</b> <i>WIRED</i></span><span class="chip" style="border-color:#3fae6b"><b style="color:#3fae6b">reconsolidation</b> <i>WIRED</i></span><span class="chip" style="border-color:#3fae6b"><b style="color:#3fae6b">inhibitory</b> <i>WIRED</i></span></div>
+    </div></div>
 
-DATA.regions.forEach(r=>{const g=document.createElementNS('http://www.w3.org/2000/svg','g');
-  g.setAttribute('class','region'+(r.id==='PNS_AFFERENT'?' mag':'')+(r.id==='AMYGDALA'?' red':''));
-  const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
-  c.setAttribute('cx',r.x*W);c.setAttribute('cy',r.y*H);
-  const n=document.createElementNS('http://www.w3.org/2000/svg','text');
-  n.setAttribute('x',r.x*W);n.setAttribute('y',r.y*H-38);n.setAttribute('class','name');n.textContent=r.id;
-  const j=document.createElementNS('http://www.w3.org/2000/svg','text');
-  j.setAttribute('x',r.x*W);j.setAttribute('y',r.y*H+40);j.setAttribute('class','job');
-  j.textContent=r.csm_job.length>30?r.csm_job.slice(0,28)+'…':r.csm_job;
-  g.appendChild(c);g.appendChild(n);g.appendChild(j);
-  g.addEventListener('click',ev=>{ev.stopPropagation();openRegion(r,ev);});vp.appendChild(g);});
+<h2>All 20 cell parts &mdash; what is built, tested, and wired</h2>
+<div class="legend"><span><i style="color:var(--grn)">&#9632;</i> behavior_tested</span><span><i style="color:var(--ylw)">&#9632;</i> bio_guided</span><span><i style="color:var(--acc)">&#9632;</i> implemented</span>
+<span>WIRED = used in the CSM brain today</span><span style="color:var(--red)">proven&middot;not yet in brain = built & tested but not integrated</span></div>
+<div class="grid">
+    <div class="prow">
+      <div class="pid" style="color:#5b8def">dendrites</div>
+      <div class="pword">DENDRITES</div>
+      <div class="ploc">PNS Afferent — Sensor reads each platform surface</div>
+      <div class="ptest">TESTED &middot; <span style="color:#5b8def">implemented</span></div>
+    </div>
+    <div class="prow">
+      <div class="pid" style="color:#3fae6b">soma</div>
+      <div class="pword">SOMA (cell body)</div>
+      <div class="ploc">Every Neuron — integrate + threshold</div>
+      <div class="ptest">TESTED &middot; <span style="color:#3fae6b">behavior_tested</span></div>
+    </div>
+    <div class="prow">
+      <div class="pid" style="color:#3fae6b">hillock</div>
+      <div class="pword">AXON HILLOCK (trigger zone)</div>
+      <div class="ploc">Frontal Decider — fires only if all inputs green</div>
+      <div class="ptest">TESTED &middot; <span style="color:#3fae6b">behavior_tested</span></div>
+    </div>
+    <div class="prow">
+      <div class="pid" style="color:#5b8def">axon</div>
+      <div class="pword">AXON (the output line)</div>
+      <div class="ploc">Decider output -> verdict travels to action</div>
+      <div class="ptest">TESTED &middot; <span style="color:#5b8def">implemented</span></div>
+    </div>
+    <div class="prow">
+      <div class="pid" style="color:#e0b341">synapse</div>
+      <div class="pword">SYNAPSE + NEUROTRANSMITTERS</div>
+      <div class="ploc">Cortical columns + Basal Ganglia (Population wiring)</div>
+      <div class="ptest">TESTED &middot; <span style="color:#e0b341">bio_guided</span></div>
+    </div>
+    <div class="prow">
+      <div class="pid" style="color:#3fae6b">inhibitory</div>
+      <div class="pword">INHIBITORY INTERNEURON (GABA)</div>
+      <div class="ploc">Amygdala veto + 25% cortical inhibitory interneurons</div>
+      <div class="ptest">TESTED &middot; <span style="color:#3fae6b">behavior_tested</span></div>
+    </div>
+    <div class="prow">
+      <div class="pid" style="color:#3fae6b">plasticity</div>
+      <div class="pword">SYNAPTIC PLASTICITY / LTP</div>
+      <div class="ploc">Neuron weights tune from labeled examples</div>
+      <div class="ptest">TESTED &middot; <span style="color:#3fae6b">behavior_tested</span></div>
+    </div>
+    <div class="prow">
+      <div class="pid" style="color:#e0b341">ei_balance</div>
+      <div class="pword">E / I BALANCE</div>
+      <div class="ploc">Cortical columns — 25% inhibitory constructed to match cortex</div>
+      <div class="ptest">TESTED &middot; <span style="color:#e0b341">bio_guided</span></div>
+    </div>
+    <div class="prow">
+      <div class="pid" style="color:#3fae6b">reconsolidation</div>
+      <div class="pword">RECONSOLIDATION</div>
+      <div class="ploc">Hippocampus — re-opens a stored decision on new evidence</div>
+      <div class="ptest">TESTED &middot; <span style="color:#3fae6b">behavior_tested</span></div>
+    </div>
+    <div class="prow">
+      <div class="pid" style="color:#3fae6b">persistent_activity</div>
+      <div class="pword">PERSISTENT / DELAY-PERIOD ACTIVITY (working memory)</div>
+      <div class="ploc">Hippocampus — Fact Ledger stores the decision</div>
+      <div class="ptest">TESTED &middot; <span style="color:#3fae6b">behavior_tested</span></div>
+    </div>
+    <div class="prow">
+      <div class="pid" style="color:#3fae6b">neurogenesis</div>
+      <div class="pword">NEUROGENESIS</div>
+      <div class="ploc">proven standalone &mdash; <b>not yet wired into the CSM brain</b></div>
+      <div class="ptest">TESTED &middot; <span style="color:#3fae6b">behavior_tested</span></div>
+    </div>
+    <div class="prow">
+      <div class="pid" style="color:#3fae6b">myelin</div>
+      <div class="pword">MYELIN</div>
+      <div class="ploc">proven standalone &mdash; <b>not yet wired into the CSM brain</b></div>
+      <div class="ptest">TESTED &middot; <span style="color:#3fae6b">behavior_tested</span></div>
+    </div>
+    <div class="prow">
+      <div class="pid" style="color:#3fae6b">self_organization</div>
+      <div class="pword">SELF-ORGANIZATION</div>
+      <div class="ploc">proven standalone &mdash; <b>not yet wired into the CSM brain</b></div>
+      <div class="ptest">TESTED &middot; <span style="color:#3fae6b">behavior_tested</span></div>
+    </div>
+    <div class="prow">
+      <div class="pid" style="color:#3fae6b">habituation</div>
+      <div class="pword">HABITUATION</div>
+      <div class="ploc">proven standalone &mdash; <b>not yet wired into the CSM brain</b></div>
+      <div class="ptest">TESTED &middot; <span style="color:#3fae6b">behavior_tested</span></div>
+    </div>
+    <div class="prow">
+      <div class="pid" style="color:#3fae6b">proteostasis</div>
+      <div class="pword">PROTEIN QUALITY CONTROL</div>
+      <div class="ploc">proven standalone &mdash; <b>not yet wired into the CSM brain</b></div>
+      <div class="ptest">TESTED &middot; <span style="color:#3fae6b">behavior_tested</span></div>
+    </div>
+    <div class="prow">
+      <div class="pid" style="color:#3fae6b">turnover</div>
+      <div class="pword">TURNOVER / RENEWAL</div>
+      <div class="ploc">proven standalone &mdash; <b>not yet wired into the CSM brain</b></div>
+      <div class="ptest">TESTED &middot; <span style="color:#3fae6b">behavior_tested</span></div>
+    </div>
+    <div class="prow">
+      <div class="pid" style="color:#3fae6b">biogenesis</div>
+      <div class="pword">SYNTHESIS (new copies of a part)</div>
+      <div class="ploc">proven standalone &mdash; <b>not yet wired into the CSM brain</b></div>
+      <div class="ptest">TESTED &middot; <span style="color:#3fae6b">behavior_tested</span></div>
+    </div>
+    <div class="prow">
+      <div class="pid" style="color:#e0b341">redundancy</div>
+      <div class="pword">COPY NUMBER (many of the same machine)</div>
+      <div class="ploc">proven standalone &mdash; <b>not yet wired into the CSM brain</b></div>
+      <div class="ptest">TESTED &middot; <span style="color:#e0b341">bio_guided</span></div>
+    </div>
+    <div class="prow">
+      <div class="pid" style="color:#3fae6b">apoptosis</div>
+      <div class="pword">APOPTOSIS</div>
+      <div class="ploc">proven standalone &mdash; <b>not yet wired into the CSM brain</b></div>
+      <div class="ptest">TESTED &middot; <span style="color:#3fae6b">behavior_tested</span></div>
+    </div>
+    <div class="prow">
+      <div class="pid" style="color:#e0b341">regrowth</div>
+      <div class="pword">REGENERATION (tissue, not neuron)</div>
+      <div class="ploc">proven standalone &mdash; <b>not yet wired into the CSM brain</b></div>
+      <div class="ptest">TESTED &middot; <span style="color:#e0b341">bio_guided</span></div>
+    </div></div>
 
-const popup=document.getElementById('popup');
-function sc(f){return f==='behavior_tested'?'#3fae6b':f==='bio_guided'?'#e0b341':f==='implemented'?'#5b8def':'#5b8def';}
-function openRegion(r,ev){let h=`<h3>${r.id}</h3><div style="color:var(--mut);margin-bottom:6px">${r.biology} — ${r.csm_job}</div>`;
-  if(!r.parts.length)h+='<div class="abstract">no dedicated cell part catalogued yet</div>';
-  r.parts.forEach(p=>{h+=`<div class="p" onclick="event.stopPropagation();showPart('${r.id}','${p.id}')">`+
-    `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;background:${sc(p.faith)}"></span>`+
-    `<b>${p.id}</b> <span style="color:var(--mut);font-size:10px">${p.status||''}</span></div>`;});
-  popup.innerHTML=h;popup.style.display='block';
-  popup.style.left=Math.min(window.innerWidth-370,ev.clientX+14)+'px';
-  popup.style.top=Math.min(window.innerHeight-200,ev.clientY+14)+'px';}
-window.showPart=function(rid,pid){const r=byId[rid];const p=r.parts.find(x=>x.id===pid);if(!p)return;
-  let h=`<h3>${p.id}</h3><div style="color:var(--mut);font-size:11px;margin-bottom:6px">region: ${rid}</div>`;
-  h+=`<div style="color:var(--ink);font-size:11px">${p.beh||''}</div>`;
-  h+=`<div class="abstract">status: ${p.status||'—'} &middot; fidelity: ${p.faith||'—'}</div>`;
-  h+=p.abstract?`<div class="abstract">≈ ${p.abstract}</div>`:`<div class="abstract">≈ no abstraction note</div>`;
-  popup.innerHTML=h;};
-svg.addEventListener('click',()=>{popup.style.display='none';});
-apply();
-</script></body></html>
+<div class="note" style="border-left-color:var(--acc)"><b>What is left to build:</b> 10 of 20 parts are proven and tested but not yet wired into the
+CSM brain &mdash; neurogenesis, myelin, self_organization, habituation, proteostasis, turnover, biogenesis, redundancy, apoptosis, regrowth. These cover cell lifecycle (neurogenesis, turnover, biogenesis, apoptosis, regrowth, redundancy, proteostasis),
+speed (myelin), and self-organization. Wiring them in is the next work; until then the brain is a single-pass evaluator, not a self-maintaining tissue.</div>
+
+</body></html>
