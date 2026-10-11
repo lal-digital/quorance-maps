@@ -16,6 +16,7 @@
   .dot{ width:12px;height:12px;border-radius:50%;display:inline-block; }
   .g{background:var(--green)} .y{background:var(--yellow)} .r{background:var(--red)}
   table{ width:100%; border-collapse:collapse; margin:10px 0 4px; font-size:13.5px; }
+  .tablescroll{ width:100%; overflow-x:auto; }
   th,td{ text-align:left; padding:9px 10px; border:1px solid var(--line); vertical-align:top; }
   th{ background:#11161d; color:var(--mut); font-weight:600; }
   td code{ background:#0b0f14; padding:1px 5px; border-radius:4px; color:#a5d6ff; font-size:12.5px; }
@@ -54,7 +55,7 @@ as scaffolding (declared, not biology). The hero-cell diagram showing "ALL 20 TE
 <h2>1 · Nervous-system organization — FAITHFUL</h2>
 <p>The region map is the part that's genuinely right. Each region maps to a real brain structure AND a real
 SSC account-review job, and nothing invents a CSM task. This is the strongest claim in the whole build.</p>
-<table>
+<div class="tablescroll"><table>
 <tr><th>Region (code)</th><th>Biological counterpart</th><th>CSM job</th><th>Status</th></tr>
 <tr><td>PNS AFFERENT</td><td>peripheral sensory nerve</td><td>read each platform surface</td><td><span class="tag tg">FAITHFUL</span></td></tr>
 <tr><td>BRAINSTEM</td><td>vital / life-support nucleus</td><td>Verifier refuses unsourced claims</td><td><span class="tag tg">FAITHFUL</span></td></tr>
@@ -64,10 +65,10 @@ SSC account-review job, and nothing invents a CSM task. This is the strongest cl
 <tr><td>CORTEX lobes</td><td>specialist cortex</td><td>perceive / integrate / recall / decide</td><td><span class="tag tg">FAITHFUL (org)</span></td></tr>
 <tr><td>BASAL GANGLIA</td><td>action selection</td><td>winner-take-all over modules</td><td><span class="tag ty">SIMPLIFIED</span></td></tr>
 <tr><td>AMYGDALA</td><td>threat / veto</td><td>NO write w/o human approval</td><td><span class="tag tr">BINARY, not graded</span></td></tr>
-</table>
+</table></div>
 
 <h2>2 · Mechanism-by-mechanism — what the code does vs a real neuron</h2>
-<table>
+<div class="tablescroll"><table style="min-width:860px">
 <tr><th>Mechanism</th><th>What the code does</th><th>What a real neuron does</th><th>Verdict</th></tr>
 
 <tr><td><b>Integrate &amp; fire</b><br><code>Neuron.integrate/decide</code></td>
@@ -114,7 +115,7 @@ SSC account-review job, and nothing invents a CSM task. This is the strongest cl
 <td>A Python <code>dict</code> keyed by account_id. No consolidation, no replay, no reconsolidation-on-recall.</td>
 <td>Hippocampus → neocortex consolidation; replay; reconsolidation updates on recall.</td>
 <td><span class="tag ty">SIMPLIFIED</span><div class="note"><code>reconsolidation.py</code> is proven elsewhere, not here.</div></td></tr>
-</table>
+</table></div>
 
 <h2>3 · The 20 "tested parts" — wired into THIS brain vs not</h2>
 <p class="note">"Wired" = actually executed by <code>CSMBrain.run()</code>. "Proven, not wired" = demonstrated in another step, absent here. "Shown only" = appears in the hero diagram but has no mechanism in the brain.</p>
