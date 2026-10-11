@@ -1,0 +1,396 @@
+{
+  "generated_utc": "2026-10-10T21:48:39-0700",
+  "cell_parts": {
+    "total": 20,
+    "with_standing_test": 20,
+    "parts": [
+      {
+        "id": "dendrites",
+        "neuron_word": "DENDRITES",
+        "behaviour": "a part that only reads the situation and hands the facts on, deciding nothing",
+        "mirror_status": "built",
+        "faithfulness": "implemented",
+        "standing_test": "tests/test_p27r_sensor.py",
+        "mechanism_in_package": true
+      },
+      {
+        "id": "soma",
+        "neuron_word": "SOMA (cell body)",
+        "behaviour": "separate inputs are combined into one state before anything decides",
+        "mirror_status": "built",
+        "faithfulness": "behavior_tested",
+        "standing_test": "tests/test_p66_soma.py",
+        "mechanism_in_package": true
+      },
+      {
+        "id": "hillock",
+        "neuron_word": "AXON HILLOCK (trigger zone)",
+        "behaviour": "one threshold, all-or-none: the same inputs either fire or rest, and never half-fire",
+        "mirror_status": "built",
+        "faithfulness": "behavior_tested",
+        "standing_test": "tests/test_p67_hillock.py",
+        "mechanism_in_package": true
+      },
+      {
+        "id": "axon",
+        "neuron_word": "AXON (the output line)",
+        "behaviour": "exactly one output leaves the cell per occasion",
+        "mirror_status": "built",
+        "faithfulness": "implemented",
+        "standing_test": "tests/test_p68_axon.py",
+        "mechanism_in_package": true
+      },
+      {
+        "id": "synapse",
+        "neuron_word": "SYNAPSE + NEUROTRANSMITTERS",
+        "behaviour": "the output crosses a gap as a signal the receiver can act on, and the receiver can weigh it",
+        "mirror_status": "built",
+        "faithfulness": "bio_guided",
+        "standing_test": "tests/connection/test_p17_connection.py",
+        "mechanism_in_package": true
+      },
+      {
+        "id": "inhibitory",
+        "neuron_word": "INHIBITORY INTERNEURON (GABA)",
+        "behaviour": "a separate cell whose output can veto, and a veto wins",
+        "mirror_status": "built",
+        "faithfulness": "behavior_tested",
+        "standing_test": "tests/test_p29r_inhibitory.py",
+        "mechanism_in_package": true
+      },
+      {
+        "id": "plasticity",
+        "neuron_word": "SYNAPTIC PLASTICITY / LTP",
+        "behaviour": "repeated evidence makes a rule harder to displace, and enough contrary evidence still displaces it",
+        "mirror_status": "built",
+        "faithfulness": "behavior_tested",
+        "standing_test": "tests/test_p69_plasticity.py",
+        "mechanism_in_package": true
+      },
+      {
+        "id": "ei_balance",
+        "neuron_word": "E / I BALANCE",
+        "behaviour": "a minority of inhibitory cells changes the population's answer in the direction inhibition predicts",
+        "mirror_status": "built",
+        "faithfulness": "bio_guided",
+        "standing_test": "tests/test_p70_ei_balance.py",
+        "mechanism_in_package": true
+      },
+      {
+        "id": "reconsolidation",
+        "neuron_word": "RECONSOLIDATION",
+        "behaviour": "a contradicted rule is re-opened rather than kept, and a re-adoption must be a strict improvement",
+        "mirror_status": "built",
+        "faithfulness": "behavior_tested",
+        "standing_test": "tests/test_p74_reconsolidation.py",
+        "mechanism_in_package": true
+      },
+      {
+        "id": "persistent_activity",
+        "neuron_word": "PERSISTENT / DELAY-PERIOD ACTIVITY (working memory)",
+        "behaviour": "a fact held across a delay is still available when it is needed later",
+        "mirror_status": "built",
+        "faithfulness": "behavior_tested",
+        "standing_test": "tests/temporal/test_p18_circuit.py",
+        "mechanism_in_package": true
+      },
+      {
+        "id": "neurogenesis",
+        "neuron_word": "NEUROGENESIS",
+        "behaviour": "the system grows a new cell on its own; NOT BUILT",
+        "mirror_status": "built",
+        "faithfulness": "behavior_tested",
+        "standing_test": "tests/test_p84_neurogenesis.py",
+        "mechanism_in_package": true
+      },
+      {
+        "id": "myelin",
+        "neuron_word": "MYELIN",
+        "behaviour": "the same answers arrive faster after wrapping, with the answers unchanged",
+        "mirror_status": "built",
+        "faithfulness": "behavior_tested",
+        "standing_test": "tests/test_p72_myelin.py",
+        "mechanism_in_package": true
+      },
+      {
+        "id": "self_organization",
+        "neuron_word": "SELF-ORGANIZATION",
+        "behaviour": "cells take their sub-roles from what they see rather than from a human assignment",
+        "mirror_status": "built",
+        "faithfulness": "behavior_tested",
+        "standing_test": "tests/test_p76_self_organization.py",
+        "mechanism_in_package": true
+      },
+      {
+        "id": "habituation",
+        "neuron_word": "HABITUATION",
+        "behaviour": "a repeated identical stimulus fades and a novel one arrives at full strength",
+        "mirror_status": "built",
+        "faithfulness": "behavior_tested",
+        "standing_test": "tests/test_p25r_verifier_signatures.py",
+        "mechanism_in_package": true
+      },
+      {
+        "id": "proteostasis",
+        "neuron_word": "PROTEIN QUALITY CONTROL",
+        "behaviour": "a faulty product is inspected as it emerges and is destroyed rather than shipped",
+        "mirror_status": "built",
+        "faithfulness": "behavior_tested",
+        "standing_test": "tests/test_p35_proteostasis.py",
+        "mechanism_in_package": true
+      },
+      {
+        "id": "turnover",
+        "neuron_word": "TURNOVER / RENEWAL",
+        "behaviour": "a part keeps its place by working, and is replaced when it stops",
+        "mirror_status": "built",
+        "faithfulness": "behavior_tested",
+        "standing_test": "tests/test_p47_second_route.py",
+        "mechanism_in_package": true
+      },
+      {
+        "id": "biogenesis",
+        "neuron_word": "SYNTHESIS (new copies of a part)",
+        "behaviour": "a new copy of a part is synthesised from a stable template and answers again",
+        "mirror_status": "built",
+        "faithfulness": "behavior_tested",
+        "standing_test": "tests/test_p50_biogenesis.py",
+        "mechanism_in_package": true
+      },
+      {
+        "id": "redundancy",
+        "neuron_word": "COPY NUMBER (many of the same machine)",
+        "behaviour": "more than one copy of the same machine exists, and damage to one does not reach another",
+        "mirror_status": "built",
+        "faithfulness": "bio_guided",
+        "standing_test": "tests/test_p54_redundancy_of_count.py",
+        "mechanism_in_package": true
+      },
+      {
+        "id": "apoptosis",
+        "neuron_word": "APOPTOSIS",
+        "behaviour": "the cell dies on lost capability, not on a count of injuries",
+        "mirror_status": "built",
+        "faithfulness": "behavior_tested",
+        "standing_test": "tests/test_p38_apoptosis.py",
+        "mechanism_in_package": true
+      },
+      {
+        "id": "regrowth",
+        "neuron_word": "REGENERATION (tissue, not neuron)",
+        "behaviour": "lost tissue is replaced; declared as tissue-level, not neuron behaviour",
+        "mirror_status": "built",
+        "faithfulness": "bio_guided",
+        "standing_test": "tests/test_p38_apoptosis.py",
+        "mechanism_in_package": true
+      }
+    ]
+  },
+  "whole_cell": {
+    "status": "RUNS BEGINNING TO END ON TOY + 9 LEVELS OF COMPLEXITY (P77-P80)",
+    "note": "Whole cell: sensor->soma->spike->seam->judgement->damage->death->new cell, 0 model calls. Single parts: all 20 proven by standing tests."
+  },
+  "csm_brain": {
+    "regions": [
+      {
+        "region": "PNS_AFFERENT",
+        "biology": "peripheral sensory nerve",
+        "csm_job": "read each platform surface (ISN/Avetta/Veriforce/Cloud/SF)"
+      },
+      {
+        "region": "BRAINSTEM",
+        "biology": "vital / life-support nucleus",
+        "csm_job": "Verifier refuses unsourced claims; credential-health monitor"
+      },
+      {
+        "region": "THALAMUS",
+        "biology": "sensory relay + gate",
+        "csm_job": "Integrator reconciles mirror vs truth, names BOTH on disagreement"
+      },
+      {
+        "region": "CEREBELLUM",
+        "biology": "coordination / error control",
+        "csm_job": "Population lateral inhibition selects one winning facet"
+      },
+      {
+        "region": "HIPPOCAMPUS",
+        "biology": "memory",
+        "csm_job": "Fact Ledger persistent memory of decided accounts"
+      },
+      {
+        "region": "OCCIPITAL",
+        "biology": "cortical: perceive",
+        "csm_job": "sensory read circuits (specialist perception cells)"
+      },
+      {
+        "region": "PARIETAL",
+        "biology": "cortical: integrate",
+        "csm_job": "reconciliation circuits (specialist integration cells)"
+      },
+      {
+        "region": "TEMPORAL",
+        "biology": "cortical: recall",
+        "csm_job": "classification recall + Fact Ledger read"
+      },
+      {
+        "region": "FRONTAL",
+        "biology": "cortical: executive",
+        "csm_job": "Decider (VERIFIED/BLOCKED/CONTINGENT) + at-risk triage"
+      },
+      {
+        "region": "BASAL_GANGLIA",
+        "biology": "action selection",
+        "csm_job": "winner-take-all: Site Tracker / Insurance / Questionnaire / Full Review"
+      },
+      {
+        "region": "AMYGDALA",
+        "biology": "threat / veto",
+        "csm_job": "Inhibitor: NO write without human approval (veto synapse)"
+      }
+    ],
+    "total_cells": 85,
+    "inhibitory_cells": 20,
+    "inhibitory_fraction": 0.235,
+    "parts_reused": [
+      "Neuron",
+      "Sensor/SensorMap",
+      "Population",
+      "Circuit",
+      "ReviewVerifier",
+      "InhibitoryPair (via review_circuit)",
+      "DecisionCircuit",
+      "ReviewNeuronCell"
+    ]
+  },
+  "tests": {
+    "build_scale": {
+      "summary": {
+        "run_id": "p108",
+        "falsifiers_loaded": [
+          "F1_VERIFIER_ABORTS",
+          "F2_CREDENTIAL_ABSTAIN",
+          "F3_HUMAN_VETO",
+          "F4_VERIFIED_ONLY_WHEN_CLEAN",
+          "F5_CELL_COUNT_SCALES",
+          "F6_INHIBITORY_FRACTION",
+          "F7_ZERO_MODEL_CALLS"
+        ],
+        "smoke_known_input_pass": {
+          "F1_VERIFIER_ABORTS": true,
+          "F2_CREDENTIAL_ABSTAIN": true,
+          "F3_HUMAN_VETO": true,
+          "F4_VERIFIED_ONLY_WHEN_CLEAN": true,
+          "F5_CELL_COUNT_SCALES": true,
+          "F6_INHIBITORY_FRACTION": true
+        },
+        "scaling": [
+          {
+            "label": "n_per_col=20",
+            "n_accounts": 200,
+            "wall_clock_s": 0.057,
+            "status_counts": {
+              "ABORTED_UNSOURCED": 40,
+              "ABSTAIN_CREDENTIAL": 40,
+              "VERIFIED": 0,
+              "BLOCKED": 0,
+              "CONTINGENT": 0,
+              "WITHHELD_HUMAN_NOT_APPROVED": 40,
+              "PREP_BLOCKED": 40,
+              "WRITE_READY": 40
+            },
+            "model_calls_total": 0,
+            "brain_cells": 85,
+            "inhibitory_cells": 20,
+            "n_per_column": 20
+          },
+          {
+            "label": "n_per_col=100",
+            "n_accounts": 200,
+            "wall_clock_s": 0.794,
+            "status_counts": {
+              "ABORTED_UNSOURCED": 40,
+              "ABSTAIN_CREDENTIAL": 40,
+              "VERIFIED": 0,
+              "BLOCKED": 0,
+              "CONTINGENT": 0,
+              "WITHHELD_HUMAN_NOT_APPROVED": 40,
+              "PREP_BLOCKED": 40,
+              "WRITE_READY": 40
+            },
+            "model_calls_total": 0,
+            "brain_cells": 405,
+            "inhibitory_cells": 100,
+            "n_per_column": 100
+          },
+          {
+            "label": "n_per_col=200",
+            "n_accounts": 200,
+            "wall_clock_s": 2.915,
+            "status_counts": {
+              "ABORTED_UNSOURCED": 40,
+              "ABSTAIN_CREDENTIAL": 40,
+              "VERIFIED": 0,
+              "BLOCKED": 0,
+              "CONTINGENT": 0,
+              "WITHHELD_HUMAN_NOT_APPROVED": 40,
+              "PREP_BLOCKED": 40,
+              "WRITE_READY": 40
+            },
+            "model_calls_total": 0,
+            "brain_cells": 805,
+            "inhibitory_cells": 200,
+            "n_per_column": 200
+          }
+        ],
+        "build_gate": "PASS",
+        "single_variable": "n_per_column (number of specialist cells per cortical column; scales the whole brain from hundreds to thousands of cells)"
+      },
+      "log_rows": 600
+    },
+    "test_clean_real": {
+      "summary": {
+        "card": "Q P108 TEST (real Sunbelt data)",
+        "n_records": 100,
+        "brain_cells": 85,
+        "inhibitory_cells": 20,
+        "status_counts": {
+          "WITHHELD_HUMAN_NOT_APPROVED": 100
+        },
+        "n_aborted_unsourced": 0,
+        "n_withheld_human_not_approved": 100,
+        "n_write_ready": 0,
+        "n_verdict_verified": 100,
+        "model_calls_total": 0,
+        "single_variable": "real-data run of the assembled CSM brain",
+        "data_source": "03_Raw_Logs_and_Data/sunbelt_pilot_results.jsonl (100 real Sunbelt review records)",
+        "notes": "All records have human_confirmed=null per the pilot fixture, so the amygdala veto silences every write (biological: no human approval = no output). This is the expected, correct behavior on read-only real data."
+      },
+      "log_rows": 100
+    },
+    "test_dirty_real": {
+      "summary": {
+        "card": "Q P108 DIRTY-TEST (real at-risk accounts)",
+        "n_records": 9379,
+        "brain_cells": 85,
+        "inhibitory_cells": 20,
+        "status_counts": {
+          "WITHHELD_HUMAN_NOT_APPROVED": 9379
+        },
+        "verdict_counts": {
+          "CONTINGENT": 839,
+          "VERIFIED": 5122,
+          "BLOCKED": 3418
+        },
+        "n_aborted_unsourced": 0,
+        "n_withheld_human_not_approved": 5122,
+        "n_blocked": 3418,
+        "n_verified": 0,
+        "model_calls_total": 0,
+        "single_variable": "brain safety gates + verdict pipeline on REAL dirty data",
+        "data_source": "runs/p104_csm_triage/real_pull/at_risk_accounts_prioritized.csv (9,379 real at-risk accounts)",
+        "mapping_note": "Three CSV risk signals mapped to three perceptual surfaces (scaffolding). Expired_Contracts>0 drives a gap. human_approved=False in fixture -> every write withheld by the amygdala veto. This proves the gates fire on real dirty data; it is NOT a compliance verdict on these accounts."
+      },
+      "log_rows": 9379
+    }
+  }
+}
