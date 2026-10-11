@@ -1,45 +1,125 @@
-<!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Quorance CSM Brain — Maps</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Quorance CSM Brain — Neural Map (anatomical)</title>
 <style>
-  body { background:#0a0e17; color:#cdd6e4; font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; margin:0; padding:40px; }
-  h1 { color:#fff; font-size:24px; }
-  .sub { color:#8a97a8; font-size:13px; margin-bottom:6px; }
-  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:18px; margin-top:28px; }
-  .card { background:#101726; border:1px solid #243352; border-radius:12px; padding:18px; }
-  .card a { color:#5b8def; font-size:17px; font-weight:700; text-decoration:none; }
-  .card a:hover { text-decoration:underline; }
-  .card p { color:#9fb0c4; font-size:13px; line-height:1.5; }
-  .foot { color:#5b6678; font-size:11px; margin-top:30px; }
-  .note { color:#e0b341; font-size:12px; margin-top:10px; }
+:root{--bg:#0a0e17;--ink:#cdd6e4;--mut:#7c8a9c;--acc:#5b8def;--grn:#3fae6b;--ylw:#e0b341;--red:#e0483c;--mag:#c0468f}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;overflow:hidden}
+#bar{position:fixed;top:0;left:0;right:0;height:42px;background:#11182a;border-bottom:1px solid #1f2a44;
+  display:flex;align-items:center;gap:14px;padding:0 14px;z-index:10;font-size:12px}
+#bar b{color:#fff}#bar .hint{color:var(--mut)}
+#zoom{margin-left:auto;display:flex;gap:6px}
+#zoom button{background:#1f2a44;color:var(--ink);border:1px solid #2a3550;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:12px}
+#stage{position:absolute;top:42px;left:0;right:0;bottom:0;overflow:hidden;cursor:grab}
+#stage.grab{cursor:grabbing}
+svg{width:100%;height:100%;display:block}
+.brain{fill:#101b30;fill-opacity:.30;stroke:#2c3c5c;stroke-opacity:.5;stroke-width:2}
+.region circle{r:28;fill:#15203a;stroke:var(--acc);stroke-width:2.5;cursor:pointer;transition:r .15s}
+.region:hover circle{stroke:#fff;r:32}
+.region text.name{fill:var(--ink);font-size:11px;text-anchor:middle;pointer-events:none;font-weight:600}
+.region text.job{fill:var(--mut);font-size:8.5px;text-anchor:middle;pointer-events:none}
+.region.mag circle{stroke:var(--mag)}.region.red circle{stroke:var(--red)}
+.link{stroke:#243352;stroke-width:1.5;fill:none}
+.pulse{fill:#e0b341}
+.popup{position:fixed;max-width:350px;background:#11182a;border:1px solid #2a3550;border-radius:10px;
+  padding:12px 14px;font-size:12px;display:none;z-index:20;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+.popup h3{margin:0 0 6px;color:#fff;font-size:14px}
+.popup .p{margin:6px 0;padding:6px 8px;border-radius:6px;background:#15203a;cursor:pointer}
+.popup .p:hover{background:#1c2a47}.popup .p b{color:var(--acc)}
+.popup .abstract{color:var(--ylw);font-size:10px;margin-top:2px}
+#legend{position:fixed;bottom:10px;left:14px;font-size:11px;color:var(--mut);z-index:10}
+#legend span{margin-right:12px}#legend i{font-style:normal}
 </style></head><body>
-<h1>The Quorance CSM Brain — Maps</h1>
-<div class="sub">Quorance / LAL Digital &middot; SSC is the first application, not the owner of the framework.</div>
-<div class="sub">Generated 2026-10-11 10:23 &middot; regenerated together with all four maps on every change (LAL-STD-023).</div>
-<div class="note">The brain reads each account from its platforms, decides VERIFIED / BLOCKED / CONTINGENT, and waits for
-human approval before any write. The loop is closed: PNS AFFERENT (sensory in) &rarr; &hellip; &rarr; AMYGDALA (veto)
-&rarr; PNS EFFERENT (motor out) &rarr; ACTING AGENT (writes into the cloud). The efferent is currently a blueprint
-stage (human-gated, never auto-submits); Q P111 is the next build.</div>
-
-<div class="grid">
-  <div class="card">
-    <a href="csm_brain_bio.html">Biological-Cell Map &rarr;</a>
-    <p>Each brain region drawn as a real neuron: dendrites (left, signal in), soma integrates, axon carries the verdict out (right). Per-region green/grey part bullets show which biological mechanisms each region leans on. Shows the full closed loop: afferent in, amygdala veto, efferent motor output, acting agent.</p>
-  </div>
-  <div class="card">
-    <a href="csm_brain_neural_map.html">Neural-Flow Map &rarr;</a>
-    <p>Animated information pulses traveling the real brain regions (afferent -> thalamus -> cortex -> basal ganglia -> decider -> amygdala -> efferent -> acting agent) placed at their true anatomical locations on a brain silhouette. Click a region to expand its parts.</p>
-  </div>
-  <div class="card">
-    <a href="csm_brain_truthmap.html">Truth Map &rarr;</a>
-    <p>Every cell part proven by a standing test, the nervous-system region organization, the real-run results (9,379 at-risk accounts, 0 model calls at decision), and an honest limits section. Source of every number is the live repo.</p>
-  </div>
-  <div class="card">
-    <a href="fidelity_audit.html">Biological Fidelity Audit &rarr;</a>
-    <p>Does the running code behave like a neuron / nervous system / brain? Region-by-region and mechanism-by-mechanism verdicts (FAITHFUL / SIMPLIFIED / MISSING), the 20 parts wired vs not, and the top fixes — including the stateful neuron (P109) and afferent sensory neuron (P110).</p>
-  </div>
+<div id="bar">
+  <b>Quorance CSM Brain — Maps</b>
+  <span class="hint">scroll zoom &middot; drag pan &middot; click region to expand cell parts &middot; amber pulses = information flow (closed loop: afferent &rarr; &hellip; &rarr; amygdala &rarr; efferent &rarr; acting agent)</span>
+  <span id="zoom">
+    <a href="csm_brain_bio.html" style="color:#5b8def">Bio</a>
+    <a href="csm_brain_neural_map.html" style="color:#5b8def">Neural</a>
+    <a href="csm_brain_truthmap.html" style="color:#5b8def">Truth</a>
+    <a href="fidelity_audit.html" style="color:#5b8def">Audit</a>
+    <button onclick="toggleBrain()" id="bbtn">brain: on</button><button onclick="resetView()">reset</button>
+  </span>
 </div>
-<div class="foot">Regions modeled (13): PNS AFFERENT, BRAINSTEM, THALAMUS, CEREBELLUM, HIPPOCAMPUS, OCCIPITAL, PARIETAL, TEMPORAL, FRONTAL, BASAL GANGLIA, AMYGDALA, PNS EFFERENT, ACTING AGENT.</div>
-<div class="foot">Source of record: /Users/mattlincoln/LAL/quorance (LAL Digital). Audit by quorance-lab-scout.</div>
+<div id="stage"><svg id="svg" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid meet"><g id="viewport"></g></svg></div>
+<div class="popup" id="popup"></div>
+<div id="legend">
+  <span><i class="dot" style="background:var(--acc)"></i>region (assembled from real cells)</span>
+  <span><i class="dot" style="background:var(--grn)"></i>part: behavior tested</span>
+  <span><i class="dot" style="background:var(--ylw)"></i>part: bio-guided</span>
+  <span><i class="dot" style="background:var(--mag)"></i>AI reads (Sensor)</span>
+  <span><i class="dot" style="background:var(--red)"></i>inhibitory veto (Amygdala)</span>
+  <span><i class="dot" style="background:#101b30;border:1px solid #2c3c5c"></i>faded = real brain location</span>
+</div>
+<script>
+const DATA={"regions": [{"id": "PNS_AFFERENT", "biology": "peripheral sensory nerve", "csm_job": "read each platform surface (ISN/Avetta/Veriforce/Cloud/SF)", "x": 0.43, "y": 0.945, "parts": []}, {"id": "BRAINSTEM", "biology": "vital / life-support nucleus", "csm_job": "Verifier refuses unsourced claims; credential-health monitor", "x": 0.53, "y": 0.8, "parts": [{"id": "apoptosis", "faith": "behavior_tested", "status": "built", "beh": "the cell dies on lost capability, not on a count of injuries", "abstract": "\u2248 set-containment death \u2014 real: damage-induced death"}, {"id": "biogenesis", "faith": "behavior_tested", "status": "built", "beh": "a new copy of a part is synthesised from a stable template and answers again", "abstract": "\u2248 synth copy from template \u2014 real: protein synthesis"}, {"id": "habituation", "faith": "behavior_tested", "status": "built", "beh": "a repeated identical stimulus fades and a novel one arrives at full strength", "abstract": "\u2248 fade on repeated identical \u2014 real: synaptic depression"}, {"id": "proteostasis", "faith": "behavior_tested", "status": "built", "beh": "a faulty product is inspected as it emerges and is destroyed rather than shipped", "abstract": "\u2248 destroy-on-contradiction \u2014 real: ubiquitin-proteasome QC"}, {"id": "redundancy", "faith": "bio_guided", "status": "built", "beh": "more than one copy of the same machine exists, and damage to one does not reach another", "abstract": "\u2248 explicit copies \u2014 real: redundant molecular machinery"}, {"id": "regrowth", "faith": "bio_guided", "status": "built", "beh": "lost tissue is replaced; declared as tissue-level, not neuron behaviour", "abstract": "\u2248 template regrow \u2014 real: neuro/glial regeneration (tissue-level)"}, {"id": "turnover", "faith": "behavior_tested", "status": "built", "beh": "a part keeps its place by working, and is replaced when it stops", "abstract": "\u2248 renewal on use \u2014 real: continuous protein turnover"}]}, {"id": "THALAMUS", "biology": "sensory relay + gate", "csm_job": "Integrator reconciles mirror vs truth, names BOTH on disagreement", "x": 0.52, "y": 0.43, "parts": [{"id": "synapse", "faith": "bio_guided", "status": "built", "beh": "the output crosses a gap as a signal the receiver can act on, and the receiver can weigh it", "abstract": "\u2248 simplified weight \u2014 real: dynamic conductance, STDP"}]}, {"id": "CEREBELLUM", "biology": "coordination / error control", "csm_job": "Population lateral inhibition selects one winning facet", "x": 0.79, "y": 0.67, "parts": [{"id": "ei_balance", "faith": "bio_guided", "status": "built", "beh": "a minority of inhibitory cells changes the population's answer in the direction inhibition predicts", "abstract": "\u2248 constructed 25% inhibitory fraction \u2014 real cortex ~20-30%, grown not set"}, {"id": "inhibitory", "faith": "behavior_tested", "status": "built", "beh": "a separate cell whose output can veto, and a veto wins", "abstract": "\u2248 simple veto flag \u2014 real inhibition is a dynamic conductance from another cell"}, {"id": "synapse", "faith": "bio_guided", "status": "built", "beh": "the output crosses a gap as a signal the receiver can act on, and the receiver can weigh it", "abstract": "\u2248 simplified weight \u2014 real: dynamic conductance, STDP"}]}, {"id": "HIPPOCAMPUS", "biology": "memory", "csm_job": "Fact Ledger persistent memory of decided accounts", "x": 0.48, "y": 0.57, "parts": [{"id": "neurogenesis", "faith": "behavior_tested", "status": "built", "beh": "the system grows a new cell on its own; NOT BUILT", "abstract": "NOT BUILT \u2014 real adult human neurogenesis contested"}, {"id": "persistent_activity", "faith": "behavior_tested", "status": "built", "beh": "a fact held across a delay is still available when it is needed later", "abstract": "\u2248 store dict \u2014 real: sustained firing / synaptic trace"}, {"id": "reconsolidation", "faith": "behavior_tested", "status": "built", "beh": "a contradicted rule is re-opened rather than kept, and a re-adoption must be a strict improvement", "abstract": "\u2248 strict-improvement rule re-open \u2014 real: labile memory on retrieval"}]}, {"id": "OCCIPITAL", "biology": "cortical: perceive", "csm_job": "sensory read circuits (specialist perception cells)", "x": 0.74, "y": 0.26, "parts": [{"id": "dendrites", "faith": "implemented", "status": "built", "beh": "a part that only reads the situation and hands the facts on, deciding nothing", "abstract": "\u2248 static weighted sum \u2014 real dendrites integrate actively over time (multi-compartment)"}, {"id": "plasticity", "faith": "behavior_tested", "status": "built", "beh": "repeated evidence makes a rule harder to displace, and enough contrary evidence still displaces it", "abstract": "\u2248 supervised example weight update \u2014 real: local, spike-timing dependent (STDP)"}, {"id": "self_organization", "faith": "behavior_tested", "status": "built", "beh": "cells take their sub-roles from what they see rather than from a human assignment", "abstract": "\u2248 counterfactual re-scoring \u2014 real: activity-dependent wiring"}, {"id": "soma", "faith": "behavior_tested", "status": "built", "beh": "separate inputs are combined into one state before anything decides", "abstract": "\u2248 static weighted sum \u2014 biology integrates over time; threshold analog, not digital"}]}, {"id": "PARIETAL", "biology": "cortical: integrate", "csm_job": "reconciliation circuits (specialist integration cells)", "x": 0.48, "y": 0.2, "parts": [{"id": "dendrites", "faith": "implemented", "status": "built", "beh": "a part that only reads the situation and hands the facts on, deciding nothing", "abstract": "\u2248 static weighted sum \u2014 real dendrites integrate actively over time (multi-compartment)"}, {"id": "plasticity", "faith": "behavior_tested", "status": "built", "beh": "repeated evidence makes a rule harder to displace, and enough contrary evidence still displaces it", "abstract": "\u2248 supervised example weight update \u2014 real: local, spike-timing dependent (STDP)"}, {"id": "self_organization", "faith": "behavior_tested", "status": "built", "beh": "cells take their sub-roles from what they see rather than from a human assignment", "abstract": "\u2248 counterfactual re-scoring \u2014 real: activity-dependent wiring"}, {"id": "soma", "faith": "behavior_tested", "status": "built", "beh": "separate inputs are combined into one state before anything decides", "abstract": "\u2248 static weighted sum \u2014 biology integrates over time; threshold analog, not digital"}]}, {"id": "TEMPORAL", "biology": "cortical: recall", "csm_job": "classification recall + Fact Ledger read", "x": 0.43, "y": 0.54, "parts": []}, {"id": "FRONTAL", "biology": "cortical: executive", "csm_job": "Decider (VERIFIED/BLOCKED/CONTINGENT) + at-risk triage", "x": 0.23, "y": 0.34, "parts": [{"id": "axon", "faith": "implemented", "status": "built", "beh": "exactly one output leaves the cell per occasion", "abstract": "we model no propagation timing"}, {"id": "ei_balance", "faith": "bio_guided", "status": "built", "beh": "a minority of inhibitory cells changes the population's answer in the direction inhibition predicts", "abstract": "\u2248 constructed 25% inhibitory fraction \u2014 real cortex ~20-30%, grown not set"}, {"id": "hillock", "faith": "behavior_tested", "status": "built", "beh": "one threshold, all-or-none: the same inputs either fire or rest, and never half-fire", "abstract": "\u2248 binary fire \u2014 real: spike + refractory + rate code"}, {"id": "myelin", "faith": "behavior_tested", "status": "built", "beh": "the same answers arrive faster after wrapping, with the answers unchanged", "abstract": "\u2248 speed wrap \u2014 real: saltatory conduction; we model no timing"}, {"id": "plasticity", "faith": "behavior_tested", "status": "built", "beh": "repeated evidence makes a rule harder to displace, and enough contrary evidence still displaces it", "abstract": "\u2248 supervised example weight update \u2014 real: local, spike-timing dependent (STDP)"}, {"id": "soma", "faith": "behavior_tested", "status": "built", "beh": "separate inputs are combined into one state before anything decides", "abstract": "\u2248 static weighted sum \u2014 biology integrates over time; threshold analog, not digital"}]}, {"id": "BASAL_GANGLIA", "biology": "action selection", "csm_job": "winner-take-all: Site Tracker / Insurance / Questionnaire / Full Review", "x": 0.43, "y": 0.43, "parts": [{"id": "axon", "faith": "implemented", "status": "built", "beh": "exactly one output leaves the cell per occasion", "abstract": "we model no propagation timing"}, {"id": "myelin", "faith": "behavior_tested", "status": "built", "beh": "the same answers arrive faster after wrapping, with the answers unchanged", "abstract": "\u2248 speed wrap \u2014 real: saltatory conduction; we model no timing"}]}, {"id": "AMYGDALA", "biology": "threat / veto", "csm_job": "Inhibitor: NO write without human approval (veto synapse)", "x": 0.4, "y": 0.56, "parts": [{"id": "inhibitory", "faith": "behavior_tested", "status": "built", "beh": "a separate cell whose output can veto, and a veto wins", "abstract": "\u2248 simple veto flag \u2014 real inhibition is a dynamic conductance from another cell"}]}, {"id": "PNS_EFFERENT", "biology": "peripheral motor nerve", "csm_job": "fires the ACTION DIRECTIVE out once the veto clears (write-prep, human-gated)", "x": 0.3, "y": 0.66, "parts": []}, {"id": "ACTING_AGENT", "biology": "effector (cloud/platform write)", "csm_job": "the acting agent or cloud write API that executes the directive into the platform", "x": 0.3, "y": 0.8, "parts": []}], "links": [["PNS_AFFERENT", "BRAINSTEM"], ["BRAINSTEM", "THALAMUS"], ["THALAMUS", "OCCIPITAL"], ["THALAMUS", "PARIETAL"], ["THALAMUS", "TEMPORAL"], ["OCCIPITAL", "PARIETAL"], ["PARIETAL", "TEMPORAL"], ["PARIETAL", "FRONTAL"], ["TEMPORAL", "FRONTAL"], ["TEMPORAL", "HIPPOCAMPUS"], ["HIPPOCAMPUS", "AMYGDALA"], ["FRONTAL", "BASAL_GANGLIA"], ["BASAL_GANGLIA", "THALAMUS"], ["OCCIPITAL", "CEREBELLUM"], ["CEREBELLUM", "BASAL_GANGLIA"], ["PARIETAL", "BRAINSTEM"], ["OCCIPITAL", "BRAINSTEM"], ["AMYGDALA", "PNS_EFFERENT"], ["PNS_EFFERENT", "ACTING_AGENT"]], "brain_path": "M150 300 C120 210 160 110 300 85 C440 60 600 65 740 120 C840 155 865 250 830 320 C815 355 780 375 745 378 C760 410 835 415 852 475 C860 530 805 560 762 542 C742 533 722 505 702 472 C665 462 625 455 588 452 C568 475 562 525 545 562 C538 600 532 642 522 662 C516 672 502 672 500 656 C497 622 502 582 512 552 C502 512 482 472 442 452 C382 448 300 448 242 432 C182 420 152 382 150 300 Z", "summary": {"parts_total": 20, "with_test": 20, "brain_cells": 85, "inhibitory_cells": 20, "real_accounts": 9379}, "generated": "2026-10-11T10:30:21-0700"};const W=1000,H=700;
+const svg=document.getElementById('svg');const vp=document.getElementById('viewport');
+let scale=1,tx=0,ty=0,drag=false,lx=0,ly=0;
+function apply(){vp.setAttribute('transform',`translate(${tx},${ty}) scale(${scale})`);}
+function zoomBy(f){scale=Math.max(.3,Math.min(7,scale*f));apply();}
+function resetView(){scale=1;tx=0;ty=0;apply();}
+const stage=document.getElementById('stage');
+stage.addEventListener('wheel',e=>{e.preventDefault();const f=e.deltaY<0?1.12:0.89;
+  const r=svg.getBoundingClientRect();const mx=(e.clientX-r.left)/r.width*W,my=(e.clientY-r.top)/r.height*H;
+  const ns=Math.max(.3,Math.min(7,scale*f));tx=mx-(mx-tx)*(ns/scale);ty=my-(my-ty)*(ns/scale);scale=ns;apply();},{passive:false});
+stage.addEventListener('mousedown',e=>{drag=true;lx=e.clientX;ly=e.clientY;stage.classList.add('grab');});
+window.addEventListener('mouseup',()=>{drag=false;stage.classList.remove('grab');});
+window.addEventListener('mousemove',e=>{if(!drag)return;const r=svg.getBoundingClientRect();
+  tx+=(e.clientX-lx)/r.width*W;ty+=(e.clientY-ly)/r.height*H;lx=e.clientX;ly=e.clientY;apply();});
+
+// faded real brain
+const brain=document.createElementNS('http://www.w3.org/2000/svg','path');
+brain.setAttribute('d',DATA.brain_path);brain.setAttribute('class','brain');vp.appendChild(brain);
+let brainOn=true;function toggleBrain(){brainOn=!brainOn;brain.style.display=brainOn?'':'none';
+  document.getElementById('bbtn').textContent='brain: '+(brainOn?'on':'off');}
+
+const byId={};DATA.regions.forEach(r=>byId[r.id]=r);
+DATA.links.forEach(([a,b],i)=>{if(!byId[a]||!byId[b])return;const A=byId[a],B=byId[b];
+  const ln=document.createElementNS('http://www.w3.org/2000/svg','line');
+  ln.setAttribute('x1',A.x*W);ln.setAttribute('y1',A.y*H);ln.setAttribute('x2',B.x*W);ln.setAttribute('y2',B.y*H);
+  ln.setAttribute('class','link');vp.appendChild(ln);
+  const pu=document.createElementNS('http://www.w3.org/2000/svg','circle');
+  pu.setAttribute('r',(a==='PNS_AFFERENT'?5:3.5));pu.setAttribute('class','pulse');
+  const am=document.createElementNS('http://www.w3.org/2000/svg','animateMotion');
+  am.setAttribute('path',`M${A.x*W} ${A.y*H} L${B.x*W} ${B.y*H}`);
+  am.setAttribute('dur',(2.2+(i%5)*0.25)+'s');am.setAttribute('begin',(i*0.3)+'s');
+  am.setAttribute('repeatCount','indefinite');pu.appendChild(am);vp.appendChild(pu);
+  const sd=document.createElementNS('http://www.w3.org/2000/svg','circle');
+  sd.setAttribute('cx',(A.x+B.x)/2*W);sd.setAttribute('cy',(A.y+B.y)/2*H);sd.setAttribute('r',2.5);
+  sd.setAttribute('fill','#e0b341');sd.setAttribute('opacity','.6');vp.appendChild(sd);
+});
+
+DATA.regions.forEach(r=>{const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+  g.setAttribute('class','region'+(r.id==='PNS_AFFERENT'?' mag':'')+(r.id==='AMYGDALA'?' red':''));
+  const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+  c.setAttribute('cx',r.x*W);c.setAttribute('cy',r.y*H);
+  const n=document.createElementNS('http://www.w3.org/2000/svg','text');
+  n.setAttribute('x',r.x*W);n.setAttribute('y',r.y*H-38);n.setAttribute('class','name');n.textContent=r.id;
+  const j=document.createElementNS('http://www.w3.org/2000/svg','text');
+  j.setAttribute('x',r.x*W);j.setAttribute('y',r.y*H+40);j.setAttribute('class','job');
+  j.textContent=r.csm_job.length>30?r.csm_job.slice(0,28)+'…':r.csm_job;
+  g.appendChild(c);g.appendChild(n);g.appendChild(j);
+  g.addEventListener('click',ev=>{ev.stopPropagation();openRegion(r,ev);});vp.appendChild(g);});
+
+const popup=document.getElementById('popup');
+function sc(f){return f==='behavior_tested'?'#3fae6b':f==='bio_guided'?'#e0b341':f==='implemented'?'#5b8def':'#5b8def';}
+function openRegion(r,ev){let h=`<h3>${r.id}</h3><div style="color:var(--mut);margin-bottom:6px">${r.biology} — ${r.csm_job}</div>`;
+  if(!r.parts.length)h+='<div class="abstract">no dedicated cell part catalogued yet</div>';
+  r.parts.forEach(p=>{h+=`<div class="p" onclick="event.stopPropagation();showPart('${r.id}','${p.id}')">`+
+    `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;background:${sc(p.faith)}"></span>`+
+    `<b>${p.id}</b> <span style="color:var(--mut);font-size:10px">${p.status||''}</span></div>`;});
+  popup.innerHTML=h;popup.style.display='block';
+  popup.style.left=Math.min(window.innerWidth-370,ev.clientX+14)+'px';
+  popup.style.top=Math.min(window.innerHeight-200,ev.clientY+14)+'px';}
+window.showPart=function(rid,pid){const r=byId[rid];const p=r.parts.find(x=>x.id===pid);if(!p)return;
+  let h=`<h3>${p.id}</h3><div style="color:var(--mut);font-size:11px;margin-bottom:6px">region: ${rid}</div>`;
+  h+=`<div style="color:var(--ink);font-size:11px">${p.beh||''}</div>`;
+  h+=`<div class="abstract">status: ${p.status||'—'} &middot; fidelity: ${p.faith||'—'}</div>`;
+  h+=p.abstract?`<div class="abstract">≈ ${p.abstract}</div>`:`<div class="abstract">≈ no abstraction note</div>`;
+  popup.innerHTML=h;};
+svg.addEventListener('click',()=>{popup.style.display='none';});
+apply();
+</script>
+<div style="position:fixed;bottom:12px;left:12px"><a href="index.html" style="color:#5b8def;font:13px sans-serif;text-decoration:none">&#8617; All CSM Brain maps</a></div>
 </body></html>
