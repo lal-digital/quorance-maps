@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-10T21:48:39-0700",
+  "generated_utc": "2026-10-11T10:17:16-0700",
   "cell_parts": {
     "total": 20,
     "with_standing_test": 20,
@@ -246,6 +246,16 @@
         "region": "AMYGDALA",
         "biology": "threat / veto",
         "csm_job": "Inhibitor: NO write without human approval (veto synapse)"
+      },
+      {
+        "region": "PNS_EFFERENT",
+        "biology": "peripheral motor nerve",
+        "csm_job": "fires the ACTION DIRECTIVE out once the veto clears (write-prep, human-gated)"
+      },
+      {
+        "region": "ACTING_AGENT",
+        "biology": "effector (cloud/platform write)",
+        "csm_job": "the acting agent or cloud write API that executes the directive into the platform"
       }
     ],
     "total_cells": 85,
