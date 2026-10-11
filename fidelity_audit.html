@@ -44,8 +44,9 @@ and a plain boolean <code>human_approved</code> gate (amygdala). <b>15 of the 20
 wired into this runtime.</b> Several mechanisms the brain DOES use are simplified in ways the code itself files
 as scaffolding (declared, not biology). The hero-cell diagram showing "ALL 20 TESTED PARTS" is accurate as a
 <b>portfolio catalog</b> of parts proven across all steps — but it overstates what <i>this brain</i> runs.
-<b>Update (Q P109):</b> the neuron core is now <b>stateful</b> — it carries a continuous membrane potential with
-leak + a refractory window, so it has memory between inputs. Verified verdict-neutral against the prior brain.
+<b>Update (Q P109 + P110):</b> the neuron core is now <b>stateful</b> (continuous membrane potential + refractory —
+memory between inputs), and the PNS AFFERENT is now a true <b>sensory neuron</b> (graded receptor potential +
+adaptation/habituation at intake). Both verified verdict-neutral against the prior brain.
 </div>
 
 <div class="legend">
@@ -147,6 +148,7 @@ SSC account-review job, and nothing invents a CSM task. This is the strongest cl
 <h2>4 · Top fixes to make it "act like a neuron"</h2>
 <ul class="fix">
 <li><b>Make the neuron stateful (DONE — Q P109).</b> <span class="tag tg">INTEGRATED</span> Added membrane-potential leak + absolute refractory window (a continuous float V, not a counter) to the cell. Verified verdict-neutral: the 7 P108 falsifiers still pass, sizes 85/405/805 unchanged, and 200 synthetic accounts produce identical verdicts. The cell now has memory between inputs (temporal summation) without changing any existing decision. Leak/refractory are first estimates — will be tuned on real data.</li>
+<li><b>Make the AFFERENT the first true sensory neuron (DONE — Q P110).</b> <span class="tag tg">INTEGRATED</span> The PNS AFFERENT (one per platform) now has a GRADED receptor potential (continuous, not boolean) and ADAPTATION at intake — a repeated identical platform signal fades while a novel one arrives at full strength — reusing the proven P25 Habituation class. 6 falsifiers pass; the emitted boolean view is unchanged on first contact (verdict-neutral), confirmed by the 7 P108 falsifiers + a live brain-path check. The "worn shirt" behaviour is now in the intake. Signature vocabulary is a first design and will be tuned on real data.</li>
 <li><b>Replace the boolean amygdala veto with the graded arbiter.</b> Wire <code>inhibitory.py</code> / <code>runtime.arbiter</code> into the write path and give inhibition strength + timing (P41-E admits it's all-or-nothing today).</li>
 <li><b>Wire <code>dendrite.py</code> preprocessing into the sensory path.</b> The brain currently bypasses the one module that makes "dendrites" mean something biological.</li>
 <li><b>Either wire the 15 proven parts or stop the hero cell claiming "all 20 in one cell."</b> Recommend: relabel the hero as "Proven parts catalog (portfolio)" and add a second panel "What this brain actually runs" so the picture stops overstating the build.</li>
