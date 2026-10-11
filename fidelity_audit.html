@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quorance CSM Brain — Biological Fidelity Audit</title>
+<style>
+  :root{ --bg:#0e1116; --card:#161b22; --ink:#e6edf3; --mut:#9da7b3; --line:#2b333d;
+         --green:#2ea043; --yellow:#d29922; --red:#f85149; --blue:#58a6ff; }
+  body{ margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 -apple-system,Segoe UI,Roboto,sans-serif; }
+  .wrap{ max-width:1080px; margin:0 auto; padding:28px 20px 80px; }
+  h1{ font-size:26px; margin:0 0 4px; } h2{ font-size:19px; margin:34px 0 10px; border-bottom:1px solid var(--line); padding-bottom:6px; }
+  .sub{ color:var(--mut); margin:0 0 18px; font-size:13.5px; }
+  .banner{ background:#2a1416; border:1px solid var(--red); border-radius:10px; padding:14px 18px; margin:18px 0; }
+  .banner b{ color:#ffb3ad; }
+  .legend{ display:flex; gap:18px; flex-wrap:wrap; margin:14px 0 6px; font-size:13px; }
+  .legend span{ display:inline-flex; align-items:center; gap:7px; }
+  .dot{ width:12px;height:12px;border-radius:50%;display:inline-block; }
+  .g{background:var(--green)} .y{background:var(--yellow)} .r{background:var(--red)}
+  table{ width:100%; border-collapse:collapse; margin:10px 0 4px; font-size:13.5px; }
+  th,td{ text-align:left; padding:9px 10px; border:1px solid var(--line); vertical-align:top; }
+  th{ background:#11161d; color:var(--mut); font-weight:600; }
+  td code{ background:#0b0f14; padding:1px 5px; border-radius:4px; color:#a5d6ff; font-size:12.5px; }
+  .tag{ font-weight:700; font-size:11.5px; padding:2px 8px; border-radius:20px; white-space:nowrap; }
+  .tg{ background:rgba(46,160,67,.15); color:var(--green); border:1px solid var(--green);}
+  .ty{ background:rgba(210,153,34,.15); color:var(--yellow); border:1px solid var(--yellow);}
+  .tr{ background:rgba(248,81,73,.15); color:var(--red); border:1px solid var(--red);}
+  .grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:10px; margin-top:10px; }
+  .pc{ background:var(--card); border:1px solid var(--line); border-radius:9px; padding:11px 12px; }
+  .pc .nm{ font-weight:600; font-size:13.5px; } .pc .st{ font-size:11.5px; margin-top:5px; }
+  .pc.g{ border-left:4px solid var(--green);} .pc.y{ border-left:4px solid var(--yellow);} .pc.r{ border-left:4px solid var(--red);}
+  ul.fix li{ margin:8px 0; } .note{ color:var(--mut); font-size:12.5px; font-style:italic; margin-top:6px; }
+  a{ color:var(--blue); }
+</style></head><body><div class="wrap">
+<h1>Quorance CSM Brain — Biological Fidelity Audit</h1>
+<p class="sub">Grounded in source read 2026-10-10: <code>src/quorance/csm_brain.py</code>, <code>biological_cell.py</code>,
+<code>population.py</code>, <code>inhibitory.py</code>, <code>dendrite.py</code>, <code>runtime.py</code> (arbiter).
+The question: does the code, forced to run, behave like a neuron / nervous system / brain?</p>
+
+<div class="banner">
+<b>Headline.</b> The running CSM brain exercises <b>~5 mechanisms</b>: a point-neuron integrate-and-fire
+(<code>Neuron.decide</code>), a per-platform <code>Sensor</code> (dendrites-of-the-afferent-nerve),
+<code>Population</code> lateral inhibition (cerebellum / basal ganglia), <code>ReviewVerifier</code> (brainstem),
+and a plain boolean <code>human_approved</code> gate (amygdala). <b>15 of the 20 proven "tested parts" are NOT
+wired into this runtime.</b> Several mechanisms the brain DOES use are simplified in ways the code itself files
+as scaffolding (declared, not biology). The hero-cell diagram showing "ALL 20 TESTED PARTS" is accurate as a
+<b>portfolio catalog</b> of parts proven across all steps — but it overstates what <i>this brain</i> runs.
+</div>
+
+<div class="legend">
+  <span><i class="dot g"></i> Faithful to biology</span>
+  <span><i class="dot y"></i> Simplified / scaffolding (declared in code)</span>
+  <span><i class="dot r"></i> Diverges, or shown but not wired</span>
+</div>
+
+<h2>1 · Nervous-system organization — FAITHFUL</h2>
+<p>The region map is the part that's genuinely right. Each region maps to a real brain structure AND a real
+SSC account-review job, and nothing invents a CSM task. This is the strongest claim in the whole build.</p>
+<table>
+<tr><th>Region (code)</th><th>Biological counterpart</th><th>CSM job</th><th>Status</th></tr>
+<tr><td>PNS AFFERENT</td><td>peripheral sensory nerve</td><td>read each platform surface</td><td><span class="tag tg">FAITHFUL</span></td></tr>
+<tr><td>BRAINSTEM</td><td>vital / life-support nucleus</td><td>Verifier refuses unsourced claims</td><td><span class="tag tg">FAITHFUL</span></td></tr>
+<tr><td>THALAMUS</td><td>sensory relay + gate</td><td>reconcile mirror vs truth</td><td><span class="tag tg">FAITHFUL (org)</span></td></tr>
+<tr><td>CEREBELLUM</td><td>coordination / error control</td><td>Population lateral inhibition → 1 winner</td><td><span class="tag tg">FAITHFUL (org)</span></td></tr>
+<tr><td>HIPPOCAMPUS</td><td>memory</td><td>Fact Ledger store</td><td><span class="tag ty">SIMPLIFIED</span></td></tr>
+<tr><td>CORTEX lobes</td><td>specialist cortex</td><td>perceive / integrate / recall / decide</td><td><span class="tag tg">FAITHFUL (org)</span></td></tr>
+<tr><td>BASAL GANGLIA</td><td>action selection</td><td>winner-take-all over modules</td><td><span class="tag ty">SIMPLIFIED</span></td></tr>
+<tr><td>AMYGDALA</td><td>threat / veto</td><td>NO write w/o human approval</td><td><span class="tag tr">BINARY, not graded</span></td></tr>
+</table>
+
+<h2>2 · Mechanism-by-mechanism — what the code does vs a real neuron</h2>
+<table>
+<tr><th>Mechanism</th><th>What the code does</th><th>What a real neuron does</th><th>Verdict</th></tr>
+
+<tr><td><b>Integrate &amp; fire</b><br><code>Neuron.integrate/decide</code></td>
+<td>Weighted sum of inputs + bias, compared to a fixed threshold → 1 or 0. All-or-nothing.</td>
+<td>Same SHAPE: dendrites sum, soma threshold, spike or rest. ✓</td>
+<td><span class="tag ty">SIMPLIFIED</span><div class="note">Faithful in form, but stateless — no membrane potential, no leak, no temporal summation between accounts. A biological neuron integrates over TIME.</div></td></tr>
+
+<tr><td><b>Dendritic preprocessing</b><br><code>dendrite.py</code></td>
+<td>Distributed nonlinear branch combining (soma sees branch activations, not raw synapses). <b>But csm_brain.py never imports or calls it</b> — the brain feeds raw booleans straight to the weights.</td>
+<td>Dendrites do local nonlinear integration (NMDA/Ca spikes) before the soma.</td>
+<td><span class="tag tr">NOT WIRED</span><div class="note">The brain's "dendrites" are plain weighted sums; the real dendritic preprocessing module exists and is proven but is not in this runtime.</div></td></tr>
+
+<tr><td><b>Action potential / spike</b></td>
+<td>None. "Fire" is the integer 1. No voltage, no refractory period, no spike timing, no rate code.</td>
+<td>All-or-nothing voltage spike, refractory period, timing-dependent (STDP).</td>
+<td><span class="tag tr">MISSING</span><div class="note">The cell is a perceptron-style decision, not a spiking neuron. No temporal dynamics at all.</div></td></tr>
+
+<tr><td><b>Inhibition / veto</b><br>amygdala</td>
+<td>Brain uses <code>inhibited = not human_approved</code> — a raw boolean flag. It does NOT use <code>inhibitory.py</code> / <code>arbiter</code>.</td>
+<td>Inhibition is graded + fast: a conductance with timing and reversal potential, can reduce output a little or a lot.</td>
+<td><span class="tag tr">BINARY, machinery unused</span><div class="note">inhibitory.py itself declares the veto is ALL-OR-NOTHING (P41-E). And the brain doesn't even call it — it's an if-flag.</div></td></tr>
+
+<tr><td><b>Lateral inhibition</b><br><code>Population.step</code></td>
+<td>Recurrent inhibition across N cells, one settles to one winner. Used for cerebellum + basal ganglia.</td>
+<td>Lateral inhibition + winner-take-all is the canonical cortical microcircuit. ✓</td>
+<td><span class="tag ty">SIMPLIFIED</span><div class="note">Settling is a fixed <code>iters=5</code> loop, not continuous time — declared scaffolding (no clock).</div></td></tr>
+
+<tr><td><b>Plasticity</b><br><code>Neuron.train</code></td>
+<td>Supervised delta rule from labeled (x,y) examples. Exists, but <b>not called</b> in the brain run — brain uses fixed hand-set weights.</td>
+<td>LTP is activity-dependent (fire-together-wire-together), mostly unsupervised, timing-dependent.</td>
+<td><span class="tag tr">NOT WIRED + simplified</span></td></tr>
+
+<tr><td><b>Axon / myelin</b></td>
+<td>Drawn in the diagram; in code it's just the output line. No conduction velocity, no saltatory propagation, no delay.</td>
+<td>Myelin speeds conduction ~50×; timing of arrival matters.</td>
+<td><span class="tag tr">LABEL ONLY</span></td></tr>
+
+<tr><td><b>Synapse / neurotransmitter</b></td>
+<td>Weighted input. No vesicle release, no receptor, no receptor-type distinction (excitatory vs inhibitory is only a sign on the weight).</td>
+<td>Neurotransmitter release, receptor kinetics, graded postsynaptic potential.</td>
+<td><span class="tag tr">MISSING</span></td></tr>
+
+<tr><td><b>Hippocampus memory</b></td>
+<td>A Python <code>dict</code> keyed by account_id. No consolidation, no replay, no reconsolidation-on-recall.</td>
+<td>Hippocampus → neocortex consolidation; replay; reconsolidation updates on recall.</td>
+<td><span class="tag ty">SIMPLIFIED</span><div class="note"><code>reconsolidation.py</code> is proven elsewhere, not here.</div></td></tr>
+</table>
+
+<h2>3 · The 20 "tested parts" — wired into THIS brain vs not</h2>
+<p class="note">"Wired" = actually executed by <code>CSMBrain.run()</code>. "Proven, not wired" = demonstrated in another step, absent here. "Shown only" = appears in the hero diagram but has no mechanism in the brain.</p>
+<div class="grid">
+  <div class="pc y"><div class="nm">Dendrites</div><div class="st">Used as plain weighted sum (no dendrite.py preprocessing)</div></div>
+  <div class="pc y"><div class="nm">Soma</div><div class="st">Threshold decide — but stateless, no membrane potential</div></div>
+  <div class="pc y"><div class="nm">Axon hillock</div><div class="st">Trigger zone = the decide() threshold</div></div>
+  <div class="pc r"><div class="nm">Axon</div><div class="st">Output line only — no conduction timing</div></div>
+  <div class="pc r"><div class="nm">Synapse + NT</div><div class="st">Weighted input; no release/receptor</div></div>
+  <div class="pc r"><div class="nm">Inhibitory interneuron</div><div class="st">Brain uses if-flag; inhibitory.py not called</div></div>
+  <div class="pc r"><div class="nm">E/I balance</div><div class="st">bio_guided; not in brain</div></div>
+  <div class="pc r"><div class="nm">Plasticity / LTP</div><div class="st">train() exists, not called in run</div></div>
+  <div class="pc r"><div class="nm">Reconsolidation</div><div class="st">Proven elsewhere, not wired</div></div>
+  <div class="pc r"><div class="nm">Persistent / delay activity</div><div class="st">Proven elsewhere; brain is stateless per account</div></div>
+  <div class="pc r"><div class="nm">Neurogenesis</div><div class="st">Proven elsewhere, not wired</div></div>
+  <div class="pc r"><div class="nm">Myelin</div><div class="st">Label only; no timing</div></div>
+  <div class="pc r"><div class="nm">Self-organization</div><div class="st">Proven elsewhere, not wired</div></div>
+  <div class="pc r"><div class="nm">Habituation</div><div class="st">Proven elsewhere (verifier sigs), not wired</div></div>
+  <div class="pc r"><div class="nm">Protein quality control</div><div class="st">Proven elsewhere, not wired</div></div>
+  <div class="pc r"><div class="nm">Turnover / renewal</div><div class="st">Proven elsewhere, not wired</div></div>
+  <div class="pc r"><div class="nm">Biogenesis (synthesis)</div><div class="st">Proven elsewhere, not wired</div></div>
+  <div class="pc r"><div class="nm">Copy number / redundancy</div><div class="st">bio_guided, not wired</div></div>
+  <div class="pc r"><div class="nm">Apoptosis</div><div class="st">Proven elsewhere, not wired</div></div>
+  <div class="pc r"><div class="nm">Regeneration</div><div class="st">bio_guided, not wired</div></div>
+</div>
+
+<h2>4 · Top fixes to make it "act like a neuron"</h2>
+<ul class="fix">
+<li><b>Make the neuron stateful (RED→GREEN-ish).</b> Add membrane-potential integration with leak + refractory period so it integrates over time, not per-call. This is the single biggest biology gap: today the cell has no memory between inputs.</li>
+<li><b>Replace the boolean amygdala veto with the graded arbiter.</b> Wire <code>inhibitory.py</code> / <code>runtime.arbiter</code> into the write path and give inhibition strength + timing (P41-E admits it's all-or-nothing today).</li>
+<li><b>Wire <code>dendrite.py</code> preprocessing into the sensory path.</b> The brain currently bypasses the one module that makes "dendrites" mean something biological.</li>
+<li><b>Either wire the 15 proven parts or stop the hero cell claiming "all 20 in one cell."</b> Recommend: relabel the hero as "Proven parts catalog (portfolio)" and add a second panel "What this brain actually runs" so the picture stops overstating the build.</li>
+<li><b>Honest settling.</b> Keep <code>iters=5</code> but render it as "approximation of continuous-time settling (no clock)" — the code already says this; the visual should too.</li>
+</ul>
+<p class="note">Faithful-as-built items to protect: the nervous-system REGION ORGANIZATION (§1), the integrate-then-threshold SHAPE, the lateral-inhibition winner-take-all, and the human-gated write (wired as a veto, never bypassed). Those are the real wins and should not be weakened in the name of more biology.</p>
+
+<p class="sub" style="margin-top:30px">Source of record: <code>/Users/mattlincoln/LAL/quorance</code> (LAL Digital). SSC is the first application, not the owner of the framework. Audit by quorance-lab-scout.</p>
+</div></body></html>
